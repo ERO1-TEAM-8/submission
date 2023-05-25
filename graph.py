@@ -15,16 +15,24 @@ G = G.to_undirected()
 def drone(G):
     e_graph = nx.eulerize(G.copy())
     circuit = list(nx.eulerian_circuit(e_graph))
-    return circuit
+    return circuit #ce circuit la
 
 def change_color(G, circuit):
     for i in range(len(circuit)):
         G.add_edge(circuit[i][0],circuit[i][1], color = 'r')
     return G
+
+#il faut calculer le sum de tout les edges presents dans le circuit
+# multiplier par le cout de drone/km => on a le cout du dronage
+
+#supposons que les drones revoie une nouvelle graphe a deneiger
+#ensuite pour snowplow: probleme de transport + cout
+
 G = change_color(G, drone(G))
 colors = nx.get_edge_attributes(G, 'color').values()
 nx.draw(G, edge_color=colors)
-ox.plot_graph(ox.project_graph(G))
+plt.show()
+#ox.plot_graph(ox.project_graph(G))
 
 #TODO:Find the shortest paths for snowplow snow removal in each sector
 
