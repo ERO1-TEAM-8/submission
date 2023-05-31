@@ -12,51 +12,10 @@ import folium
 
 sectors_graph = []
 
-def my_eulerize(G):
-    if G.order() == 0:
-        raise nx.NetworkXPointlessConcept("Cannot Eulerize null graph")
-    if not nx.is_connected(G):
-        raise nx.NetworkXError("G is not connected")
-    odd_degree_nodes = [n for n, d in G.degree() if d % 2 == 1]
-    G = nx.MultiGraph(G)
-    if len(odd_degree_nodes) == 0:
-        return G
-
-    # get all shortest paths between vertices of odd degree
-    odd_deg_pairs_paths = [
-        (m, {n: nx.shortest_path(G, source=m, target=n, weight="length")})
-        for m, n in combinations(odd_degree_nodes, 2)
-    ]
-    print("bonsoir")
-
-    # use the number of vertices in a graph + 1 as an upper bound on
-    # the maximum length of a path in G
-    upper_bound_on_max_path_length = len(G) + 1
-
-    # use "len(G) + 1 - len(P)",
-    # where P is a shortest path between vertices n and m,
-    # as edge-weights in a new graph
-    # store the paths in the graph for easy indexing later
-    Gp = nx.Graph()
-    for n, Ps in odd_deg_pairs_paths:
-        for m, P in Ps.items():
-            if n != m:
-                Gp.add_edge(
-                    m, n, weight =  len(P), path=P
-                )
-
-    # find the minimum weight matching of edges in the weighted graph
-    best_matching = nx.Graph(list(nx.min_weight_matching(Gp)))
-
-    # duplicate each edge along each path in the set of paths in Gp
-    for m, n in best_matching.edges():
-        path = Gp[m][n]["path"]
-        G.add_edges_from(nx.utils.pairwise(path))
-    return G
 
 
 def drone(G):
-    e_graph = my_eulerize(G.copy())
+    e_graph = nx.eulerize(G.copy())
     circuit = list(nx.eulerian_circuit(e_graph))
     return circuit #ce circuit la
 
@@ -65,7 +24,81 @@ def change_color(G, circuit):
         G.add_edge(circuit[i][0],circuit[i][1], color = 'r')
     return G
 
+def total_len(G, circuit):
+    total = 0
+    for i in range(len(circuit)):
+        total += G.edges[circuit[i][0], circuit[i][1]].get('length')
+    #total = total * 0.01
+    return total
 
+#il faut calculer le sum de tout les edges presents dans le circuit
+# multiplier par le cout de drone/km => on a le cout du dronage
+
+#supposons que les drones revoie une nouvelle graphe a deneiger
+#ensuite pour snowplow: probleme de transport + cout
+G2 = nx.DiGraph() # ca ca permet de faire un graph oriente
+G2.add_edges_from([('1', '2'), ('2', '3'), ('3', '1'), ('3', '4'), ('4', '5'), ('5', '1')])
+
+def eulerize_preserving_direction(G):
+    # Create a new graph
+    eulerized_G = nx.DiGraph()
+
+    # Iterate over each node in the original graph
+    for node in G.nodes():
+        in_degree = G.in_degree(node)
+        out_degree = G.out_degree(node)
+
+        # If in-degree is greater than out-degree, add out-degree-in-degree additional edges
+        if in_degree > out_degree:
+            for _ in range(in_degree - out_degree):
+                new_node = f"dummy_{node}"
+                eulerized_G.add_edge(node, new_node)
+
+        # If out-degree is greater than in-degree, add out-degree-in-degree additional edges
+        elif out_degree > in_degree:
+            for _ in range(out_degree - in_degree):
+                new_node = f"dummy_{node}"
+                eulerized_G.add_edge(new_node, node)
+
+        # Copy existing edges from the original graph
+        for successor in G.successors(node):
+            eulerized_G.add_edge(node, successor)
+
+    return eulerized_G
+
+options = {
+    'node_color': 'yellow',
+    'node_size': 500,
+    'width': 2,
+    'arrowstyle': '-|>',
+    'arrowsize': 12,
+}
+
+def has_eulerian_circuit(G):
+    # Check if the graph is strongly connected
+    for node in G.nodes():
+        if 'dummy_' in node:
+            continue
+        if G.in_degree(node) != G.out_degree(node):
+            return False
+
+    if not nx.is_strongly_connected(G):
+        print(1)
+        return False
+
+    # Check if each node has equal in-degree and out-degree
+
+    return True
+
+#print(has_eulerian_circuit(G))
+#print(has_eulerian_circuit(nx.eulerize(G)))
+#print(has_eulerian_circuit(G2))
+print(list(nx.eulerian_circuit(eulerize_preserving_direction(G2))))
+#print(eulerize_preserving_direction(G2).edges)
+#G2 = eulerize_preserving_direction(G2)
+pos = nx.spring_layout(G2)
+nx.draw_networkx(G2, arrows=True, **options)
+plt.show()
 #Color each sector with a different color of the graph
 def color_sector(G):
     # Define the colors for each sector
