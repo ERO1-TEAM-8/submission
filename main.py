@@ -38,7 +38,12 @@ def color_sector(G , sectors):
                 G.nodes[node]['color'] = colors[i]
     return G
 
-
+def is_eulerian_digraph(digraph):
+    # Create a directed graph from the given graph
+    for node in digraph.nodes:
+        if digraph.in_degree(node) != digraph.out_degree(node):
+            return False
+    return True
 #----------------------MAIN----------------------#
 
 def main():
@@ -51,6 +56,7 @@ def main():
        # Gs.append(Graphundirected)
     Graph = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
     G2 = eulerize_directed_graph(Graph)
+    print(nx.is_strongly_connected(Graph))
     print(to_eulerian_directed(Graph, G2))
     Graphundirected = Graph.to_undirected()
     Gs.append(Graphundirected)

@@ -26,31 +26,26 @@ average_speed_type1 = 10
 def eulerize_directed_graph(graph):
     in_degrees = graph.in_degree()
     out_degrees = graph.out_degree()
+    start_nodes = [node for node in graph if out_degrees[node] > in_degrees[node]]
+    end_nodes = [node for node in graph if in_degrees[node] > out_degrees[node]]
 
-    start_nodes, end_nodes = [], []
-    for node in graph:
-        if out_degrees[node] > in_degrees[node]:
-            start_nodes.append(node)
-        elif in_degrees[node] > out_degrees[node]:
-            end_nodes.append(node)
+    if start_nodes == [] and end_nodes == []:
+        return graph
+    
+    eulerized_graph = graph.copy()
+    dummy_node = "dummy"
+    eulerized_graph.add_node(dummy_node)
 
-    if start_nodes and end_nodes:
-        eulerized_graph = graph.copy()
-        dummy_node = "dummy"
-        eulerized_graph.add_node(dummy_node)
+    for node in start_nodes:
+        eulerized_graph.add_edge(dummy_node, node)
 
-        for node in start_nodes:
-            eulerized_graph.add_edge(dummy_node, node)
-
-        for node in end_nodes:
-            eulerized_graph.add_edge(node, dummy_node)
-        
-        return eulerized_graph
+    for node in end_nodes:
+        eulerized_graph.add_edge(node, dummy_node)
     
     return eulerized_graph
 
-def to_eulerian_directed(G, eulerized_graph, start="dummy"):
-    eulerian_circuit = list(nx.eulerian_circuit(eulerized_graph, source=start))
+def to_eulerian_directed(G, eulerized_graph):
+    eulerian_circuit = list(nx.eulerian_circuit(eulerized_graph)) #
     if eulerian_circuit[0][0] == "dummy":
         eulerian_circuit = eulerian_circuit[1:]
     for i in range(len(eulerian_circuit) - 1):
