@@ -55,14 +55,11 @@ def main():
       #  Graphundirected = Graph.to_undirected()
        # Gs.append(Graphundirected)
     Graph = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
-    G2 = eulerize_directed_graph(Graph)
-    print(nx.is_strongly_connected(Graph))
-    print(to_eulerian_directed(Graph, G2))
+    
     Graphundirected = Graph.to_undirected()
     Gs.append(Graphundirected)
     drone_circuits = []
     for G in Gs:
-        print(G)
         drone_circuits.append(drone(G))
         cost_drone(G, drone_circuits[0])
         G = change_color(G, drone(G))
@@ -71,11 +68,14 @@ def main():
         nx.draw(G, edge_color=colors)
         plt.show()
     
-    #cost_drone(G, circut)
-    snow_circuits = snow_removal(Gs)
-    for c in snow_circuits:
-        print(c)
     
+    #cost_drone(G, circut)
+    #snow_circuits = snow_removal(Gs)
+    #for c in snow_circuits:
+    #    print(c)
+    
+    G2 = eulerize_directed_graph(Graph)
+    print(to_eulerian_directed(Graph, G2))
     #cost_snow_removal(G, snow_removal(G))
 
    
