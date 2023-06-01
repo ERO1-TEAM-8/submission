@@ -41,30 +41,41 @@ def color_sector(G , sectors):
 
 #----------------------MAIN----------------------#
 
-
 def main():
     #real graph
     sectors = ["Outremont"]#, "Verdun", "Saint-Léonard", "Rivière-des-prairies-pointe-aux-trembles", "Le Plateau-Mont-Royal"]#
     Gs = []
-    for i in range(len(sectors)):
-        Graph = ox.graph_from_place(sectors[i] + ", Montreal, Canada", network_type='all') # OPTI :certified:
-        Graphundirected = Graph.to_undirected()
-        Gs.append(Graphundirected)
-    
+    #for i in range(len(sectors)):
+     #   Graph = ox.graph_from_place(sectors[i] + ", Montreal, Canada", network_type='all') # OPTI :certified:
+      #  Graphundirected = Graph.to_undirected()
+       # Gs.append(Graphundirected)
+    Graph = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
+    G2 = eulerize_directed_graph(Graph)
+    print(to_eulerian_directed(Graph, G2))
+    Graphundirected = Graph.to_undirected()
+    Gs.append(Graphundirected)
     drone_circuits = []
     for G in Gs:
         print(G)
         drone_circuits.append(drone(G))
         cost_drone(G, drone_circuits[0])
+        G = change_color(G, drone(G))
+        
+        colors = nx.get_edge_attributes(G, 'color').values()
+        nx.draw(G, edge_color=colors)
+        plt.show()
+    
     #cost_drone(G, circut)
     snow_circuits = snow_removal(Gs)
     for c in snow_circuits:
         print(c)
-    #cost_snow_removal(G, snow_removal(G))
     
+    #cost_snow_removal(G, snow_removal(G))
+
+   
 
     #demo graph
-    
+
     '''
         G = nx.Graph()
         G.add_nodes_from([1, 2, 3, 4, 5])
@@ -78,7 +89,7 @@ def main():
     '''
 
    # plt.show()
-    ox.plot_graph(ox.project_graph(G))
+   # ox.plot_graph(ox.project_graph(G))
 
 
 

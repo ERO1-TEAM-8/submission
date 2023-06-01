@@ -21,36 +21,49 @@ average_speed_type1 = 10
 # multiplier par le cout de drone/km => on a le cout du dronage
 
 #supposons que les drones revoie une nouvelle graphe a deneiger
-#ensuite pour snowplow: probleme de transport + cout
-G2 = nx.DiGraph() # ca ca permet de faire un graph oriente
-G2.add_edges_from([('1', '2'), ('2', '3'), ('3', '1'), ('3', '4'), ('4', '5'), ('5', '1')])
+#ensuite pour snowplow: probleme de transport + cou
 
-def eulerize_preserving_direction(G):
-    # Create a new graph
-    eulerized_G = nx.DiGraph()
+def eulerize_directed_graph(graph):
+    in_degrees = graph.in_degree()
+    out_degrees = graph.out_degree()
 
-    # Iterate over each node in the original graph
-    for node in G.nodes():
-        in_degree = G.in_degree(node)
-        out_degree = G.out_degree(node)
+    start_nodes, end_nodes = [], []
+    for node in graph:
+        if out_degrees[node] > in_degrees[node]:
+            start_nodes.append(node)
+        elif in_degrees[node] > out_degrees[node]:
+            end_nodes.append(node)
 
-        # If in-degree is greater than out-degree, add out-degree-in-degree additional edges
-        if in_degree > out_degree:
-            for _ in range(in_degree - out_degree):
-                new_node = f"dummy_{node}"
-                eulerized_G.add_edge(node, new_node)
+    if start_nodes and end_nodes:
+        eulerized_graph = graph.copy()
+        dummy_node = "dummy"
+        eulerized_graph.add_node(dummy_node)
 
-        # If out-degree is greater than in-degree, add out-degree-in-degree additional edges
-        elif out_degree > in_degree:
-            for _ in range(out_degree - in_degree):
-                new_node = f"dummy_{node}"
-                eulerized_G.add_edge(new_node, node)
+        for node in start_nodes:
+            eulerized_graph.add_edge(dummy_node, node)
 
-        # Copy existing edges from the original graph
-        for successor in G.successors(node):
-            eulerized_G.add_edge(node, successor)
+        for node in end_nodes:
+            eulerized_graph.add_edge(node, dummy_node)
+        
+        return eulerized_graph
+    
+    return eulerized_graph
 
-    return eulerized_G
+def to_eulerian_directed(G, eulerized_graph, start="dummy"):
+    eulerian_circuit = list(nx.eulerian_circuit(eulerized_graph, source=start))
+    if eulerian_circuit[0][0] == "dummy":
+        eulerian_circuit = eulerian_circuit[1:]
+    for i in range(len(eulerian_circuit) - 1):
+        if eulerian_circuit[i][1] == "dummy":
+            short_path = nx.shortest_path(G, eulerian_circuit[i][0], eulerian_circuit[i+1][1])
+            short_list = []
+            for x in range(len(short_path) - 1):
+                short_list.append((short_path[x], short_path[x+1]))
+            eulerian_circuit[i:i+2] = short_list
+    if eulerian_circuit[len(eulerian_circuit) - 1][1] == "dummy":
+        eulerian_circuit = eulerian_circuit[:len(eulerian_circuit) - 1]
+    return eulerian_circuit
+
 
 options = {
     'node_color': 'yellow',
@@ -82,11 +95,9 @@ def has_eulerian_circuit(G):
 #print(list(nx.eulerian_circuit(eulerize_preserving_direction(G2))))
 #print(eulerize_preserving_direction(G2).edges)
 #G2 = eulerize_preserving_direction(G2)
-pos = nx.spring_layout(G2)
-nx.draw_networkx(G2, arrows=True, **options)
-plt.show()
-
-
+#pos = nx.spring_layout(G2)
+#nx.draw_networkx(G2, arrows=True, **options)
+#plt.show()
 
 def snow_removal(Gs):
     # Find the shortest paths for snowplow snow removal in each sector
@@ -96,7 +107,30 @@ def snow_removal(Gs):
     return circuit
         
 def cost_snow_removal(G, snowplow_paths):
-    #TODO
+
+    '''
+    # Define the cost model parameters
+    fixed_cost_drone = 100
+    cost_per_km_drone = 0.01
+    fixed_cost_snowplow_type1 = 500
+    cost_per_km_snowplow_type1 = 1.1
+    hourly_cost_type1_first8hours = 1.1
+    hourly_cost_type1_after8hours = 1.3
+    average_speed_type1 = 10
+    # Calculate the cost of snow removal operations
+    cost_snow_removal = 0
+    for sector in sectors:
+        for i in range(len(snowplow_paths[sector])):
+            if i < 8:
+                cost_snow_removal += nx.resistance_distance(G, snowplow_paths[sector][i], snowplow_paths[sector][i+1]) * cost_per_km_snowplow_type1 
+            else:
+                cost_snow_removal += nx.resistance_distance(G, snowplow_paths[sector][i], snowplow_paths[sector][i+1]) * cost_per_km_snowplow_type1 * 1.3
+    cost_snow_removal += fixed_cost_snowplow_type1
+    return cost_snow_removal
+    '''
+
+
+
 
 
 
