@@ -1,4 +1,4 @@
-# Compilation Instruction
+# Compilation Instructions
 
 # Run Drone Simulation 
 ./main.sh drone
