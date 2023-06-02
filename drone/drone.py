@@ -17,6 +17,7 @@ import folium
 #Get the shortest path of  circuit 
 def drone(G):
     e_graph = nx.eulerize(G.copy())
+    #min weight
     circuit = list(nx.eulerian_circuit(e_graph))
     return circuit 
 
@@ -44,8 +45,8 @@ def cost_drone(G , circuit):
         cost += (distance * cost_per_km_drone)
 
         #Plot cost on edge
-        nx.draw_networkx_edge_labels(G, pos=nx.spring_layout(G),  edge_labels={(circuit[i][0], circuit[i][1]):
-                         distance * cost_per_km_drone})
+        #nx.draw_networkx_edge_labels(G, pos=nx.spring_layout(G),  edge_labels={(circuit[i][0], circuit[i][1]):
+        #                distance * cost_per_km_drone})
 
     print(" The total cost of the drone is: " + str(cost) + " $")
     return cost 

@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 from itertools import combinations
 import folium
 
-from drone import *
+from drone.drone import *
 
 # Define the cost model parameters
 fixed_cost_snowplow_type1 = 500
