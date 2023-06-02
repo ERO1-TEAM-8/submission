@@ -1,5 +1,5 @@
  #!/bin/bash
-echo -e "
+printf -- "
 -----------------------------------------------------
 ⚠️  WARNING ⚠️
 -----------------------------------------------------
@@ -32,7 +32,7 @@ if [[ $choice != "y" ]]; then
 fi
 
 
-echo -e "---------------------------------------------------------------Instaling Project requirements...---------------------------------------------------------------\n"
+printf -- "---------------------------------------------------------------Instaling Project requirements...---------------------------------------------------------------\n"
 source ~/opt/anaconda3/etc/profile.d/conda.sh
 
 # Check if conda  is installed
@@ -52,7 +52,7 @@ else
 
 fi
 
-echo -e "---------------------------------------------------------------Creating New Conda Environment...---------------------------------------------------------------\n"
+printf -- "---------------------------------------------------------------Creating New Conda Environment...---------------------------------------------------------------\n"
 #Create conda environment and install requirements
 conda create --name $input_variable --file requirements.txt
 if [ $? -ne 0 ]; then
@@ -60,12 +60,12 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-echo -e "---------------------------------------------------------------Finishing Instaling Project requirements...---------------------------------------------------------------\n"
+printf -- "---------------------------------------------------------------Finishing Instaling Project requirements...---------------------------------------------------------------\n"
 
 
 if [ $# -eq 0 ]; then
     echo "Error: No simulation type specified. Please provide either 'drone' or 'snow_removal' as an argument."
-    echo -e "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------\n"
+    printf -- "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------\n"
     conda deactivate 
     conda env remove --name $input_variable --yes
     exit 1
@@ -73,34 +73,40 @@ fi
 
 simulation_type=$1
 
-if [ "$simulation_type" = "drone" ]; then
-    echo "todo"
 
-elif [ "$simulation_type" = "snow_removal" ]; then
-    echo -e "---------------------------------------------------------------Step2: Snow removal Simulation ...---------------------------------------------------------------\n"
+if [[ "$simulation_type" = "snowremoval" ]] || [[ "$simulation_type" = "drone" ]]; then
+    printf -- "---------------------------------------------------------------Step2: $simulation_type Simulation ...---------------------------------------------------------------\n"
 
     if [[ "$CONDA_DEFAULT_ENV" != $input_variable ]]; then
         source ~/opt/anaconda3/etc/profile.d/conda.sh   #WARNING README : replace it with your conda.sh path
         conda activate $input_variable
     fi
-    echo -e "---------------------------------------------------------------Conda environment activated---------------------------------------------------------------\n"
-    echo -e "Executing:\n"$(which python)" snowremoval/main.py"
-    $(which python) snowremoval/main.py
+    printf -- "---------------------------------------------------------------Conda environment activated---------------------------------------------------------------\n"
+    echo  "Executing:\n"$(which python)" snowremoval/main.py"
+    $(which python) $simulation_type/main.py
     if [ $? -ne 0 ]; then
-        echo -e "Command failure : Please make sure that python command path is correct and contain anconda \n.Hint: Modify the script to use python3 instead of python  or reinstall  conda ."
-        echo -e "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------\n"
+        echo  "Command failure : Please make sure that python command path is correct and contain anconda \n.Hint: Modify the script to use python3 instead of python  or reinstall  conda ."
+        echo  "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------"
         conda deactivate 
         conda env remove --name $input_variable --yes
         exit 1
     fi
-    echo -e "---------------------------------------------------------------Opening the Graph Simulation ......---------------------------------------------------------------\n"
+    echo  "---------------------------------------------------------------Opening the Graph Simulation ......---------------------------------------------------------------"
     open network.html
 
 else
-    echo "Error: Unknown simulation type. Please provide either 'drone' or 'snow_removal' as an argument."
+    echo "Error: Unknown simulation type. Please provide either 'drone' or 'snowremoval' as an argument."
+    echo "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------"
+    conda deactivate 
+    conda env remove --name $input_variable --yes
     exit 1
 fi
-echo -e "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------\n"
-conda deactivate 
 
-conda env remove --name $input_variable --yes
+read -p "Do you want to delete the environment , packages and network.html (y/n)? " choice
+if [[ $choice != "y" ]]; then
+  echo "Exit by user choice."
+  exit 1
+fi
+echo  "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------"
+conda deactivate  && conda env remove --name $input_variable --yes
+rm -rf network.html

@@ -11,8 +11,6 @@ import geopy.distance
 import folium
 
 
-#TODO : get data from routes to remove snow 
-
 
 #Get the shortest path of  circuit 
 def drone(G):

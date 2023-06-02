@@ -44,11 +44,11 @@ def eulerize_directed_graph(graph):
 
     for node in end_nodes:
         eulerized_graph.add_edge(node, dummy_node)
-    best_matching = nx.Graph(list(nx.max_weight_matching(eulerized_graph)))
-    for n,m in best_matching.edges():
-        path = eulerized_graph[m][n]["path"]
-
-
+    #Gp =eulerized_graph.copy()
+    #best_matching = nx.Graph(list(nx.max_weight_matching(Gp)))
+    #for n,m in best_matching.edges():
+    #    path = Gp[m][n]["path"]
+    #    eulerized_graph.add_edges_from(nx.utils.pairwise(path))
     return eulerized_graph
 
 def to_eulerian_directed(G, eulerized_graph):
