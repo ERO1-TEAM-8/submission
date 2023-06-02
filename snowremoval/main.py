@@ -1,8 +1,4 @@
 from snowremoval import *
-
-
-
-
 import osmnx as ox
 import networkx as nx
 import matplotlib.pyplot as plt

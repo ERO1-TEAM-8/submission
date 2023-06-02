@@ -1,10 +1,7 @@
+from  drone import * 
 
-
-#USED TO  GET THE GRAPH OF THE CITY
 import osmnx as ox
-#USED TO CREATE THE GRAPH OF THE CITY
 import networkx as nx
-#USED TO plot data on the graph
 import matplotlib.pyplot as plt
 from itertools import combinations
 import pandas as pd
@@ -14,7 +11,6 @@ from pyvis.network import Network
 from IPython.display import IFrame
 
 
-sectors = []
 
 
 #----------------------Add colors----------------------#
@@ -67,53 +63,17 @@ def max_weight_graph(G):
 
 def main():
     #real graph
-    sectors = ["Outremont"]#, "Verdun", "Saint-Léonard", "Rivière-des-prairies-pointe-aux-trembles", "Le Plateau-Mont-Royal"]#
-    Gs = []
-    #for i in range(len(sectors)):
-     #   Graph = ox.graph_from_place(sectors[i] + ", Montreal, Canada", network_type='all') # OPTI :certified:
-      #  Graphundirected = Graph.to_undirected()
-       # Gs.append(Graphundirected)
+
+    #pyvis
+
+
     Graph = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
-    
-    Graphundirected = Graph.to_undirected()
-    Gs.append(Graphundirected)
-    drone_circuits = []
-    #for G in Gs:
-        #circuit = drone(G)
-        #drone_circuits.append(circuit)
-        #cost_drone(G, drone_circuits[0])
-        #G = change_color(G, circuit , 'r')
-        #colors = nx.get_edge_attributes(G, 'color').values()
-        #plt.figure(figsize=(8, 6))
-        #plt.title('Model Drone')
-        #nx.draw(G, edge_color=colors , node_size=10, node_color='black', alpha=1.0, width=1.0, with_labels=False)
-
-
-        #for u, v, data in G.edges(data=True):
-         #   data['weight'] = data.get('weight', 0)  # If 'weight' is not in the dictionary, default to 0
-        #G_max = max_weight_graph(G)
-        #odd_matching_dupes = nx.max_weight_matching(G_max)
-        #odd_matching = [tuple(sorted(edge)) for edge in odd_matching_dupes]
-        #g_odd_complete_min_edges = nx.Graph(odd_matching)
-        #nx.draw(g_odd_complete_min_edges, node_size=20, edge_color='blue', node_color='red')
-        #plt.title('Min Weight Matching on Complete Graph')
-        #plt.axis('off')
-        #plt.show()
-    
-    
-    #cost_drone(G, circut)
-    #snow_circuits = snow_removal(Gs)
-    #for c in snow_circuits:
-    #    print(c)
-
-    #plt.title('Model Snow Removal')
-    G2 = eulerize_directed_graph(Graph)
-    circuit2 =to_eulerian_directed(Graph, G2)
-
+    G= Graph.to_undirected()
+    circuit = drone(G)
+    cost =cost_drone(G, circuit)
     net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white", directed=True)
-
     # loop over nodes, add them to the pyvis network, and style them
-    for node in G2.nodes():
+    for node in G.nodes():
         net.add_node(
         node,
         color="yellow",
@@ -123,17 +83,17 @@ def main():
     )
 
 # loop over edges, add them to the pyvis network, and style them
-    for edge in G2.edges():
+    for edge in G.edges():
         net.add_edge(
         edge[0], 
         edge[1], 
         color="white", 
         width=0.5
     )
-    for i in range(len(circuit2)):
+    for i in range(len(circuit)):
         net.add_edge(
-        circuit2[i][0], 
-        circuit2[i][1], 
+        circuit[i][0], 
+        circuit[i][1], 
         color="red", 
         width=1
     )
@@ -146,12 +106,29 @@ def main():
 
     # In    a Jupyter notebook
     IFrame('network.html', width=800, height=600)
- 
+
+    #plot graph : option
+
+    G = change_color(G, circuit , 'r')
+    colors = nx.get_edge_attributes(G, 'color').values()
+    plt.figure(figsize=(8, 6))
+    #plot cost as title
+    plt.title('Model Drone: Total cost:' + str(cost) + " $")
+    nx.draw(G , node_size=10, node_color='black', alpha=1.0, width=1.0, with_labels=False)
+    plt.show()
 
 
-    #cost_snow_removal(G, snow_removal(G))
-
-   
+    #for u, v, data in G.edges(data=True):
+    #data['weight'] = data.get('weight', 0)  # If 'weight' is not in the dictionary, default to 0
+    #G_max = max_weight_graph(G)
+    #odd_matching_dupes = nx.max_weight_matching(G_max)
+    #odd_matching = [tuple(sorted(edge)) for edge in odd_matching_dupes]
+    #g_odd_complete_min_edges = nx.Graph(odd_matching)
+    #nx.draw(g_odd_complete_min_edges, node_size=20, edge_color='blue', node_color='red')
+    #plt.title('Min Weight Matching on Complete Graph')
+    #plt.axis('off')
+    #plt.show()
+    
 
     #demo graph
 

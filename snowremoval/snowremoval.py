@@ -8,10 +8,6 @@ from itertools import combinations
 
 
 
-
-
-
-
 # Define the cost model parameters
 fixed_cost_snowplow_type1 = 500
 cost_per_km_snowplow_type1 = 1.1

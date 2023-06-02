@@ -53,12 +53,18 @@ else
 fi
 
 printf -- "---------------------------------------------------------------Creating New Conda Environment...---------------------------------------------------------------\n"
-#Create conda environment and install requirements
-conda create --name $input_variable --file requirements.txt
-if [ $? -ne 0 ]; then
-    echo "Requirement instalation failed."
-    exit 1
+#Check if conda environment already exists
+if [[ "$CONDA_DEFAULT_ENV" == $input_variable ]]; then
+    echo "Conda environment named $input_variable already exists."
+else
+    #Create conda environment and install requirements
+    conda create --name $input_variable --file requirements.txt
+    if [ $? -ne 0 ]; then
+        echo "Requirement instalation failed."
+        exit 1
+    fi
 fi
+
 
 printf -- "---------------------------------------------------------------Finishing Instaling Project requirements...---------------------------------------------------------------\n"
 
@@ -73,7 +79,6 @@ fi
 
 simulation_type=$1
 
-
 if [[ "$simulation_type" = "snowremoval" ]] || [[ "$simulation_type" = "drone" ]]; then
     printf -- "---------------------------------------------------------------Step2: $simulation_type Simulation ...---------------------------------------------------------------\n"
 
@@ -82,7 +87,7 @@ if [[ "$simulation_type" = "snowremoval" ]] || [[ "$simulation_type" = "drone" ]
         conda activate $input_variable
     fi
     printf -- "---------------------------------------------------------------Conda environment activated---------------------------------------------------------------\n"
-    echo  "Executing:\n"$(which python)" snowremoval/main.py"
+    echo  "Executing:\n"$(which python)" $simulation_type/main.py"
     $(which python) $simulation_type/main.py
     if [ $? -ne 0 ]; then
         echo  "Command failure : Please make sure that python command path is correct and contain anconda \n.Hint: Modify the script to use python3 instead of python  or reinstall  conda ."
@@ -108,5 +113,4 @@ if [[ $choice != "y" ]]; then
   exit 1
 fi
 echo  "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------"
-conda deactivate  && conda env remove --name $input_variable --yes
-rm -rf network.html
+conda deactivate  && conda env remove --name $input_variable --yes && rm -rf network.html
