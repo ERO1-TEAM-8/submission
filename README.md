@@ -3,7 +3,7 @@ chmod +x main.sh
 # Run Drone Simulation 
 ./main.sh drone
 
-# Run Snow Removal simulation
+# Run Snow Removal Simulation
 ./main.sh snow_removal
 
 # ⚠️ Warning
