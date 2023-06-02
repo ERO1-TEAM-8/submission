@@ -1,9 +1,9 @@
 # Compilation Instruction
 
-# RUN DRUN SIMULATION 
+# Run Drone Simulation 
 ./main.sh drone
 
-# RUN SNOW REMOVAL SIMULATION
+# Run snow removal simulation
 ./main.sh snow_removal
 
 # ⚠️ Warning
