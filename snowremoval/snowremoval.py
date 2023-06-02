@@ -5,9 +5,12 @@ import networkx as nx
 #USED TO plot data on the graph
 import matplotlib.pyplot as plt
 from itertools import combinations
-import folium
 
-from drone.drone import *
+
+
+
+
+
 
 # Define the cost model parameters
 fixed_cost_snowplow_type1 = 500
@@ -41,7 +44,10 @@ def eulerize_directed_graph(graph):
 
     for node in end_nodes:
         eulerized_graph.add_edge(node, dummy_node)
-    
+    best_matching = nx.Graph(list(nx.max_weight_matching(eulerized_graph)))
+    for n,m in best_matching.edges():
+        path = eulerized_graph[m][n][]
+
     return eulerized_graph
 
 def to_eulerian_directed(G, eulerized_graph):
@@ -94,12 +100,7 @@ def has_eulerian_circuit(G):
 #nx.draw_networkx(G2, arrows=True, **options)
 #plt.show()
 
-def snow_removal(Gs):
-    # Find the shortest paths for snowplow snow removal in each sector
-    circuit = []
-    for G in Gs:
-        circuit.append(drone(G))
-    return circuit
+
         
 def cost_snow_removal(G, snowplow_paths):
 

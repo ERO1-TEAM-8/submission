@@ -1,5 +1,4 @@
-from drone.drone import *
-from snowremoval.snowremoval import *
+
 
 #USED TO  GET THE GRAPH OF THE CITY
 import osmnx as ox

@@ -8,6 +8,8 @@ cd ../drone
 if [[ "$CONDA_DEFAULT_ENV" != "ox" ]]; then
     conda activate ox
 fi
+#python3
+#python
 /Users/ahmadharkous/opt/anaconda3/envs/ox/bin/python /Users/ahmadharkous/Desktop/s6-ing/ERO1/submission/drone/main.py
 #python3 main.py
 

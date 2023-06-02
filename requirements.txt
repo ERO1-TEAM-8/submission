@@ -1,7 +1,6 @@
+pyvis
 osmnx
 networkx
 matplotlib
-itertools
 pandas
-pyvis
 IPython
