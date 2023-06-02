@@ -14,9 +14,11 @@ Works only on macos!
 If u want to run it on another OS:
 
 You need to check the path of conda.sh and replace it in the script where there is source command 
-The lines ro replace are located in the main.sh file:
+
+The lines to replace are located in the main.sh file at the root of the project:
 
 line 27: source ~/opt/anaconda3/etc/profile.d/conda.sh
+
 line 74: source ~/opt/anaconda3/etc/profile.d/conda.sh 
 
 # Donate 
