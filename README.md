@@ -3,11 +3,11 @@
 # Run Drone Simulation 
 ./main.sh drone
 
-# Run snow removal simulation
+# Run Snow Removal simulation
 ./main.sh snow_removal
 
 # ⚠️ Warning
-Maybe need to replace python path with your local path in  srcipts/drone_simulation.sh and scripts/snow_removal_simulation.sh
+Maybe u need to replace  manually python path with your local python path in the following scripts srcipts/drone_simulation.sh and scripts/snow_removal_simulation.sh
 
 # Donate 
 paypal.me/project_maintainer
