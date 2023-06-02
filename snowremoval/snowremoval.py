@@ -46,7 +46,7 @@ def eulerize_directed_graph(graph):
         eulerized_graph.add_edge(node, dummy_node)
     best_matching = nx.Graph(list(nx.max_weight_matching(eulerized_graph)))
     for n,m in best_matching.edges():
-        path = eulerized_graph[m][n][]
+        path = eulerized_graph[m][n]["path"]
 
     return eulerized_graph
 

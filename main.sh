@@ -10,10 +10,19 @@ Press 'y' to continue. Press any other key to exit.
 
 
 
-Warning : You need to have conda 4.13.0 installed and added to your path .\n
-Works only on macos!\n
-If u want to run it on linux or windows , you need to check the path of conda.sh and replace it in the script where there is source command  or simply uncomment the line of source command on windows
+Instalation Warning:\n
 
+You need to have conda 4.13.0 installed and added to your path.\n
+
+Works only on macos!\n
+
+If u want to run it on another OS:\n
+
+You need to check the path of conda.sh and replace it in the script where there is source command\n
+The lines ro replace are located in the main.sh file:\n
+
+line 27: source ~/opt/anaconda3/etc/profile.d/conda.sh\n
+line 74: source ~/opt/anaconda3/etc/profile.d/conda.sh\n
 -----------------------------------------------------\n"
 
 read -p "Proceed (y/n)? " choice
