@@ -19,7 +19,7 @@ Works only on macos!\n
 If u want to run it on another OS:\n
 
 You need to check the path of conda.sh and replace it in the script where there is source command\n
-The lines to replace are located in the main.sh file at teh root of the project:\n
+The lines to replace are located in the main.sh file at the root of the project:\n
 
 line 27: source ~/opt/anaconda3/etc/profile.d/conda.sh\n
 line 74: source ~/opt/anaconda3/etc/profile.d/conda.sh\n
