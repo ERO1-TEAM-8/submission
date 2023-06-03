@@ -120,7 +120,7 @@ def main():
 
 
     # Animation part
-    visit_colors = {1:'black', 2:'red', 3:'blue'}
+    visit_colors = {1:'black', 2:'red', 3:'blue' , 4:'green', 5:'yellow', 6:'orange', 7:'purple', 8:'pink', 9:'brown', 10:'gray'}
     edge_cnter = {}
     
 
