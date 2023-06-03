@@ -15,6 +15,7 @@ import os
 import glob
 import numpy as np
 import imageio
+import contextily as ctx
 
 
 #----------------------Add colors----------------------#
@@ -113,13 +114,22 @@ def main():
     #plot graph : option
 
     G = change_color(G, circuit , 'r')
-    colors = nx.get_edge_attributes(G, 'color').values()
+    
+
     node_positions = nx.spring_layout(G)  # compute node positions
     plt.figure(figsize=(8, 6))
     #plot cost as title
     plt.title('Model Drone: Total cost:' + str(cost) + " $")
-    nx.draw(G, pos=node_positions, node_size=10, node_color='black', alpha=1.0, width=1.0, with_labels=False)
+    nx.draw(G , node_size=10, node_color='black', alpha=1.0, width=1.0, with_labels=False)
+    # Plot the graph without displaying it
+    fig, ax = ox.plot_graph(G, show=False, close=False)
+
+    # Add the basemap
+    ctx.add_basemap(ax, zoom=12, url=ctx.providers.Stamen.TonerLite)
     plt.show()
+    
+
+
 
     # Animation part
     visit_colors = {1:'black', 2:'red', 3:'blue'}

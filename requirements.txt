@@ -6,3 +6,4 @@ pandas
 IPython
 geopy
 imageio
+contextily
