@@ -170,14 +170,10 @@ def main():
         # make movie
         with imageio.get_writer(movie_filename, mode='I', duration=1000/fps) as writer:
             for filename in filenames:
-                image = imageio.imread(filename)
+                image = imageio.v2.imread(filename)
                 writer.append_data(image)
 
-
     make_circuit_video('fig/png/', 'fig/gif/cpp_route_animation.gif', fps=3)
-
-
-
 
 if __name__ == "__main__":
       main()
