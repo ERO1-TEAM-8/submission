@@ -3,3 +3,4 @@ __pycache__/
 lib/
 network.html
 fig/
+.DS_Store
