@@ -47,5 +47,5 @@ paypal.me/project_maintainer (JK)
 # For fun: Play with the graph
 
 
-![Alt Text](circuit_drone_comp/Screenshot 2023-06-04 at 5.48.12 PM.png)
+![Alt Text](circuit_drone_comp/anim1.png)
 
