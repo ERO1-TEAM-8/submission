@@ -15,123 +15,31 @@ import os
 import glob
 import numpy as np
 import imageio
-import contextily as ctx
+from networkx.algorithms.matching import max_weight_matching
 
 
-#----------------------Add colors----------------------#
+#----------------------Utilities---------------------#
 
 def change_color(G, circuit , color):
     for i in range(len(circuit)):
         G.add_edge(circuit[i][0],circuit[i][1], color)
     return G
 
-def total_len(G, circuit):
-    total = 0
-    for i in range(len(circuit)):
-        total += G.edges[circuit[i][0], circuit[i][1]].get('length')
-    #total = total * 0.01
-    return total
+# Function to create animation from the generated images
+def make_circuit_video(image_path, movie_filename, fps=5):
+    # sorting filenames in order
+        filenames = glob.glob(image_path + 'img*.png')
+        filenames_sort_indices = np.argsort([int(os.path.basename(filename).split('.')[0][3:]) for filename in filenames])
+        filenames = [filenames[i] for i in filenames_sort_indices]
 
-#Color each sector with a different color of the graph
-def color_sector(G , sectors):
-    # Define the colors for each sector
-    colors = ["red", "blue", "green", "yellow", "orange"]
-    # Color each sector with a different color of the graph
-    for i in range(len(sectors)):
-        for node in G.nodes():
-            if str(node) in sectors[i]:
-                G.nodes[node]['color'] = colors[i]
-    return G
+        # make movie
+        with imageio.get_writer(movie_filename, mode='I', duration=1000/fps) as writer:
+            for filename in filenames:
+                image = imageio.v2.imread(filename)
+                writer.append_data(image)
 
-def is_eulerian_digraph(digraph):
-    # Create a directed graph from the given graph
-    for node in digraph.nodes:
-        if digraph.in_degree(node) != digraph.out_degree(node):
-            return False
-    return True
-
-
-def max_weight_graph(G):
-    G_max = nx.Graph()
-
-    for u, v, data in G.edges(data=True):
-        if G_max.has_edge(u,v):
-            # compare the 'weight' attribute and keep the edge with the highest weight
-            if data['weight'] > G_max[u][v]['weight']:
-                G_max[u][v]['weight'] = data['weight']
-        else:
-            G_max.add_edge(u, v, weight=data['weight'])
-
-    return G_max
-
-#----------------------MAIN----------------------#
-
-def main():
-    #real graph
-
-    #pyvis
-
-    Graph = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
-    G= Graph.to_undirected()
-    circuit = drone(G)
-    cost =cost_drone(G, circuit)
-    net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white", directed=True)
-    # loop over nodes, add them to the pyvis network, and style them
-    for node in G.nodes():
-        net.add_node(
-        node,
-        color="yellow",
-        size=10,
-        title="Node: " + str(node),
-        label="Node " + str(node)
-    )
-
-    # loop over edges, add them to the pyvis network, and style them
-    for edge in G.edges():
-        net.add_edge(
-        edge[0], 
-        edge[1], 
-        color="white", 
-        width=0.5
-    )
-    for i in range(len(circuit)):
-        net.add_edge(
-        circuit[i][0], 
-        circuit[i][1], 
-        color="red", 
-        width=1
-    )
-
-    # Add some global settings
-    net.barnes_hut()
-    net.set_edge_smooth('dynamic')
-    net.show_buttons(filter_=['physics'])
-    net.show("network.html")
-
-    # In    a Jupyter notebook
-    IFrame('network.html', width=800, height=600)
-
-    #plot graph : option
-
-    G = change_color(G, circuit , 'r')
-    
-
-    node_positions = nx.spring_layout(G)  # compute node positions
-    plt.figure(figsize=(8, 6))
-    #plot cost as title
-    plt.title('Model Drone: Total cost:' + str(cost) + " $")
-    nx.draw(G , node_size=10, node_color='black', alpha=1.0, width=1.0, with_labels=False)
-    # Plot the graph without displaying it
-    fig, ax = ox.plot_graph(G, show=False, close=False)
-
-    # Add the basemap
-    ctx.add_basemap(ax, zoom=12, url=ctx.providers.Stamen.TonerLite)
-    plt.show()
-    
-
-
-
-    # Animation part
+def generate_gif(G,circuit):
+    node_positions = nx.spring_layout(G)  
     visit_colors = {1:'black', 2:'red', 3:'blue' , 4:'green', 5:'yellow', 6:'orange', 7:'purple', 8:'pink', 9:'brown', 10:'gray'}
     edge_cnter = {}
     
@@ -169,20 +77,79 @@ def main():
         plt.close()
 
 
+def pyvis_graph(G ,circuit):
+    net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white", directed=True)
+    # loop over nodes, add them to the pyvis network, and style them
+    for node in G.nodes():
+        net.add_node(
+        node,
+        color="yellow",
+        size=10,
+        title="Node: " + str(node),
+        label="Node " + str(node)
+    )
 
-    # Function to create animation from the generated images
-    def make_circuit_video(image_path, movie_filename, fps=5):
-    # sorting filenames in order
-        filenames = glob.glob(image_path + 'img*.png')
-        filenames_sort_indices = np.argsort([int(os.path.basename(filename).split('.')[0][3:]) for filename in filenames])
-        filenames = [filenames[i] for i in filenames_sort_indices]
+    # loop over edges, add them to the pyvis network, and style them
+    for edge in G.edges():
+        net.add_edge(
+        edge[0], 
+        edge[1], 
+        color="white", 
+        width=0.5
+    )
+    for i in range(len(circuit)):
+        net.add_edge(
+        circuit[i][0], 
+        circuit[i][1], 
+        color="red", 
+        width=1
+    )
 
-        # make movie
-        with imageio.get_writer(movie_filename, mode='I', duration=1000/fps) as writer:
-            for filename in filenames:
-                image = imageio.v2.imread(filename)
-                writer.append_data(image)
+    # Add some global settings
+    net.barnes_hut()
+    net.set_edge_smooth('dynamic')
+    net.show_buttons(filter_=['physics'])
+    net.show("network.html")
 
+    # In    a Jupyter notebook
+    IFrame('network.html', width=800, height=600)
+    
+
+def nx_graph(G , title , circuit ,cost):
+    G = change_color(G, circuit , 'r')
+    plt.figure(figsize=(8, 6))
+    plt.title(title+'\n Total cost:' + str(cost) + " $")
+    nx.draw(G, node_size=10, node_color='black', edge_color='red', alpha=1.0, width=1.0, with_labels=False)
+
+#----------------------MAIN----------------------#
+
+def main():
+    #real graph
+
+
+    #NOT OPTI
+    Graph = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
+    G= Graph.to_undirected()
+    circuit = drone(G)
+    cost =cost_drone(G, circuit)
+
+    #OPTI
+    Graph2 = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
+    G2= Graph2.to_undirected()
+    circuit2 = drone2(G2)
+    cost2 =cost_drone(G, circuit2)
+
+
+    #pyvis : option
+    pyvis_graph(G2 , circuit2)
+
+    #plot graph : option
+    nx_graph(G , "Model Drone Normal:" ,circuit,cost)
+    nx_graph(G2 , "Model Drone CPP OPTI:",circuit2,cost2)
+    plt.show()
+    
+    #animation 
+    generate_gif(G,circuit)
     make_circuit_video('fig/png/', 'fig/gif/cpp_route_animation.gif', fps=3)
 
 if __name__ == "__main__":

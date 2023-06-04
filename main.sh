@@ -1,4 +1,8 @@
  #!/bin/bash
+ if [ $# -eq 0 ]; then
+    echo "Error: No simulation type specified. Please provide either 'drone' or 'snowremoval' as an argument."
+    exit 1
+fi
 printf -- "
 -----------------------------------------------------
 ⚠️  WARNING ⚠️
@@ -69,13 +73,7 @@ fi
 printf -- "---------------------------------------------------------------Finishing Instaling Project requirements...---------------------------------------------------------------\n"
 
 
-if [ $# -eq 0 ]; then
-    echo "Error: No simulation type specified. Please provide either 'drone' or 'snow_removal' as an argument."
-    printf -- "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------\n"
-    conda deactivate 
-    conda env remove --name $input_variable --yes
-    exit 1
-fi
+
 
 simulation_type=$1
 
@@ -98,6 +96,7 @@ if [[ "$simulation_type" = "snowremoval" ]] || [[ "$simulation_type" = "drone" ]
     fi
     echo  "---------------------------------------------------------------Opening the Graph Simulation ......---------------------------------------------------------------"
     open network.html
+    open -a "Safari" fig/gif/cpp_route_animation.gif
 
 else
     echo "Error: Unknown simulation type. Please provide either 'drone' or 'snowremoval' as an argument."
