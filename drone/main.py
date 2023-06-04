@@ -125,6 +125,7 @@ def nx_graph(G , title , circuit ,cost):
 
 #----------------------MAIN----------------------#
 
+#Outremont, Montreal, Canada
 def main():
     #real graph
 
