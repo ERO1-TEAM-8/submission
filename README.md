@@ -30,8 +30,8 @@ paypal.me/project_maintainer (JK)
 
 # Model Comparaison Drone , Outremont, Montreal, Canada , Hmmm... Why it Cost More ...?
 <div >
-  <img src="circuit_drone_comp/Screenshot 2023-06-04 at 4.58.25 PM.png" alt="Image 1" width="400" height="400" />
-  <img src="circuit_drone_comp/Screenshot 2023-06-04 at 4.58.31 PM.png" alt="Image 2" width="400" height="400" />
+  <img src="circuit_drone_comp/normal.png" alt="Image 1" width="400" height="400" />
+  <img src="circuit_drone_comp/opti.png" alt="Image 2" width="400" height="400" />
 </div>
 
 # Model comparaison Drone Simulation, Leynhac, France

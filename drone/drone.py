@@ -149,4 +149,4 @@ def cost_drone(G , circuit):
 
     print(" The total cost of the drone is: " + str(cost) + " $")
     print(" The total number of edges is: " + str(COUNT))
-    return cost 
+    return cost , COUNT 

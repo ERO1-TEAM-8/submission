@@ -197,10 +197,10 @@ def pyvis_graph(G ,circuit):
     IFrame('network.html', width=800, height=600)
     
 
-def nx_graph(G , title , circuit ,cost):
+def nx_graph(G , title , circuit ,cost , count):
     G = change_color(G, circuit , 'r')
     plt.figure(figsize=(8, 6))
-    plt.title(title+'\n Total cost:' + str(cost) + " $")
+    plt.title(title+'\n Total cost:' + str(cost)+" $" +"\n# Of Edges:"+str(count))
     nx.draw(G, node_size=10, node_color='black', edge_color='red', alpha=1.0, width=1.0, with_labels=False)
 
 #----------------------MAIN----------------------#
@@ -212,19 +212,19 @@ def main(city):
     Graph = ox.graph_from_place(city, network_type='all')  # OPTI :certified:
     G = Graph.to_undirected()
     circuit = drone(G)
-    cost = cost_drone(G, circuit)
+    cost, count = cost_drone(G, circuit)
 
     # OPTI
     Graph2 = ox.graph_from_place(city, network_type='all')  # OPTI :certified:
     G2 = Graph2.to_undirected()
     circuit2 = drone2(G2)
-    cost2 = cost_drone(G, circuit2)
+    cost2 , count2 = cost_drone(G, circuit2)
 
     print("Plotting graph ...")
 
     # plot graph: option
-    nx_graph(G, f"{city}\nModel Drone Normal:", circuit, cost)
-    nx_graph(G2, f"{city}\nModel Drone CPP OPTI:", circuit2, cost2)
+    nx_graph(G, f"{city}\nModel Drone Normal:", circuit, cost,count)
+    nx_graph(G2, f"{city}\nModel Drone CPP OPTI:", circuit2, cost2,count2)
     plt.show()
 
     # pyvis: option
