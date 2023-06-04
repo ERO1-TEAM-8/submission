@@ -26,6 +26,7 @@ paypal.me/project_maintainer (JK)
 
 # Snow Removal Circuit Simulation , Leynhac, France
 ![Alt Text](circuit_snow_removal/gif/cpp_route_animation.gif)
+![Alt Text](circuit_drone_comp/Screenshot 2023-06-04 at 5.48.12 PM.png)
 
 # Model Comparaison Drone , Outremont, Montreal, Canada , Hmmm... Why it Cost More ...?
 <div >
@@ -41,7 +42,7 @@ paypal.me/project_maintainer (JK)
 
 ![Image 2](circuit_drone_comp/gif/circuit_drone2.gif)
 *Opti circuit*
-![Image 3](circuit_drone_comp/Screenshot 2023-06-04 at 5.48.12 PM.png)
+
 
 # For fun: Play with the graph
 
