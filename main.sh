@@ -95,8 +95,23 @@ if [[ "$simulation_type" = "snowremoval" ]] || [[ "$simulation_type" = "drone" ]
         exit 1
     fi
     echo  "---------------------------------------------------------------Opening the Graph Simulation ......---------------------------------------------------------------"
-    open network.html
-    open -a "Safari" fig/gif/cpp_route_animation.gif
+    # open network.html if it exists
+    if [[ -f "network.html" ]]; then
+      open "network.html"
+    fi
+
+    # open circuit_drone.gif in Safari if it exists
+    if [[ -f "circuit_drone/gif/circuit_drone.gif" ]]; then
+      open -a "Safari" "circuit_drone/gif/circuit_drone.gif"
+    fi
+    if [[ -f "circuit_drone2/gif/circuit_drone2.gif" ]]; then
+      open -a "Safari" "circuit_drone2/gif/circuit_drone2.gif"
+    fi
+    if [[ -f "circuit_snow/gif/circuit_snow.gif" ]]; then
+      open -a "Safari" "circuit_snow/gif/circuit_snow.gif"
+    fi
+    
+
 
 else
     echo "Error: Unknown simulation type. Please provide either 'drone' or 'snowremoval' as an argument."
@@ -112,4 +127,4 @@ if [[ $choice != "y" ]]; then
   exit 1
 fi
 echo  "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------"
-conda deactivate  && conda env remove --name $input_variable --yes && rm -rf network.html  && rm -rf fig
+conda deactivate  && conda env remove --name $input_variable --yes && rm -rf network.html  && rm -rf circuit_drone

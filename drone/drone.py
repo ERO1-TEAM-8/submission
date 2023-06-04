@@ -20,6 +20,8 @@ def multigraph_to_max_weight_graph(G):
             F.add_edge(u, v, weight=data.get('weight', 1))
     return F
 
+
+
 def add_augmenting_path_to_graph(graph, min_weight_pairs):
     """
     Add the min weight matching edges to the original graph

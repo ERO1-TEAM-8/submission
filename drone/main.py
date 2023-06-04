@@ -38,18 +38,18 @@ def make_circuit_video(image_path, movie_filename, fps=5):
                 image = imageio.v2.imread(filename)
                 writer.append_data(image)
 
-def generate_gif(G,circuit):
+def generate_gif(G,circuit,path):
     node_positions = nx.spring_layout(G)  
     visit_colors = {1:'black', 2:'red', 3:'blue' , 4:'green', 5:'yellow', 6:'orange', 7:'purple', 8:'pink', 9:'brown', 10:'gray'}
     edge_cnter = {}
     
 
     # ensure the directory for the images exists
-    if not os.path.exists('fig/png/'):
-        os.makedirs('fig/png/')
+    if not os.path.exists(path +'/png/'):
+        os.makedirs(path+'/png/')
 
-    if not os.path.exists('fig/gif/'):
-        os.makedirs('fig/gif/')
+    if not os.path.exists(path+'/gif/'):
+        os.makedirs(path+'/gif/')
 
     for i, e in enumerate(circuit, start=1):
         edge = frozenset([e[0], e[1]])
@@ -65,7 +65,9 @@ def generate_gif(G,circuit):
         circuit_i = copy.deepcopy(circuit[0:i])
         g_i = nx.Graph()
         for edge_i in circuit_i:
-            visits_i = edge_cnter[frozenset(edge_i)]
+            # Explicitly form a tuple of the two nodes defining the edge
+            edge_tuple = (edge_i[0], edge_i[1])
+            visits_i = edge_cnter[frozenset(edge_tuple)]
             g_i.add_edge(edge_i[0], edge_i[1], visits_i=visits_i)
         g_i_edge_colors = [visit_colors[e[2].get('visits_i', 1)] for e in g_i.edges(data=True)]
 
@@ -73,7 +75,7 @@ def generate_gif(G,circuit):
         nx.draw_networkx_edges(g_i, pos=node_positions, edge_color=g_i_edge_colors, alpha=0.8)
 
         plt.axis('off')
-        plt.savefig('fig/png/img{}.png'.format(i), dpi=120, bbox_inches='tight')
+        plt.savefig(path+'/png/img{}.png'.format(i), dpi=120, bbox_inches='tight')
         plt.close()
 
 
@@ -147,10 +149,12 @@ def main():
     nx_graph(G , "Model Drone Normal:" ,circuit,cost)
     nx_graph(G2 , "Model Drone CPP OPTI:",circuit2,cost2)
     plt.show()
-    
+
     #animation 
-    generate_gif(G,circuit)
-    make_circuit_video('fig/png/', 'fig/gif/cpp_route_animation.gif', fps=3)
+    generate_gif(G,circuit,"circuit_drone")
+    make_circuit_video('circuit_drone/png/', 'circuit_drone/gif/circuit_drone.gif', fps=7)
+    generate_gif(G2,circuit2,"circuit_drone2")
+    make_circuit_video('circuit_drone2/png/', 'circuit_drone2/gif/circuit_drone2.gif', fps=7)
 
 if __name__ == "__main__":
       main()
