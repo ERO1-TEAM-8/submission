@@ -1,10 +1,7 @@
-#USED TO  GET THE GRAPH OF THE CITY
 import osmnx as ox
-#USED TO CREATE THE GRAPH OF THE CITY
 import networkx as nx
-#USED TO plot data on the graph
 import matplotlib.pyplot as plt
-from itertools import combinations
+import geopy.distance 
 
 
 
@@ -130,6 +127,3 @@ def cost_snow_removal(G , circuit):
         return cost1
     print("The snowplow type I is the better one, and the cost will be: " + str(cost2) + " $")
     return cost2
-
-
-
