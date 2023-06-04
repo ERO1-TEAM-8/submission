@@ -49,3 +49,7 @@ paypal.me/project_maintainer (JK)
 
 ![Alt Text](circuit_drone_comp/anim1.png)
 
+![Alt Text](circuit_drone_comp/anim2.png)
+
+![Alt Text](circuit_drone_comp/anim3.png)
+
