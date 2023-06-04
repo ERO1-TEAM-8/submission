@@ -6,6 +6,11 @@ chmod +x main.sh
 # 3. Run Snow Removal Simulation:
 ./main.sh snow_removal Sector,City,Country
 
+# Output
+1. Open graphs plots
+2  Close them
+3. Generate GIF
+4. Open the GIF and html graph , to play with ,  in the safari browser
 # ⚠️ Warning
 You need to have conda 4.13.0 installed and added to your path.
 
