@@ -41,6 +41,7 @@ paypal.me/project_maintainer (JK)
 
 ![Image 2](circuit_drone_comp/gif/circuit_drone2.gif)
 *Opti circuit*
+![Image 3](circuit_drone_comp/Screenshot 2023-06-04 at 5.48.12 PM.png)
 
 # For fun: Play with the graph
-![Image 3](circuit_drone_comp/Screenshot 2023-06-04 at 5.48.12 PM.png)
+
