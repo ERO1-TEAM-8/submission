@@ -35,13 +35,29 @@ paypal.me/project_maintainer (JK)
 
 # Model comparaison Drone Simulation, Leynhac, France
 
+
+
+<style>
+  figure {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  figcaption {
+    margin-bottom: 10px;
+    text-align: center;
+  }
+</style>
+
 <div>
   <figure>
-    <img src="circuit_drone_comp/gif/circuit_drone.gif" alt="Image 1" width="300" height="300" />
     <figcaption>Normal Circuit</figcaption>
+    <img src="circuit_drone_comp/gif/circuit_drone.gif" alt="Image 1" width="300" height="300" />
   </figure>
   <figure>
-    <img src="circuit_drone_comp/gif/circuit_drone2.gif" alt="Image 2" width="300" height="300" />
     <figcaption>Opti circuit</figcaption>
+    <img src="circuit_drone_comp/gif/circuit_drone2.gif" alt="Image 2" width="300" height="300" />
   </figure>
 </div>
+
