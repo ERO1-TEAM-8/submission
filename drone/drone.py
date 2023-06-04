@@ -9,8 +9,11 @@ import folium
 
 from networkx.algorithms.matching import max_weight_matching
 
+import itertools
 
 
+
+'''
 def multigraph_to_max_weight_graph(G):
     F = nx.Graph()
     for u, v, data in G.edges(data=True):
@@ -19,7 +22,29 @@ def multigraph_to_max_weight_graph(G):
         else:
             F.add_edge(u, v, weight=data.get('weight', 1))
     return F
+'''
 
+
+def get_shortest_paths_distances(graph, pairs, edge_weight_name):
+    """Compute shortest distance between each pair of nodes in a graph.  Return a dictionary keyed on node pairs (tuples)."""
+    distances = {}
+    for pair in pairs:
+        distances[pair] = nx.dijkstra_path_length(graph, pair[0], pair[1], weight=edge_weight_name)
+    return distances
+
+
+def create_complete_graph(pair_weights, flip_weights=True):
+    """
+    Create a completely connected graph using a list of vertex pairs and the shortest path distances between them
+    Parameters:
+        pair_weights: list[tuple] from the output of get_shortest_paths_distances
+        flip_weights: Boolean. Should we negate the edge attribute in pair_weights?
+    """
+    g = nx.Graph()
+    for k, v in pair_weights.items():
+        wt_i = - v if flip_weights else v
+        g.add_edge(k[0], k[1], attr_dict={'distance': v, 'weight': wt_i})
+    return g
 
 
 def add_augmenting_path_to_graph(graph, min_weight_pairs):
@@ -68,31 +93,31 @@ def create_eulerian_circuit(graph_augmented, graph_original, starting_node=None)
 
 
 
-#Get the shortest path of  circuit : opti
+#Drone Circuit: Opti
 def drone2(G, starting_node=None):
-    # Convert G to max-weight graph
-    G_max_weight = multigraph_to_max_weight_graph(G)
+    #Find Nodes of Odd Degree
+    nodes_odd_degree = [v for v, d in G.degree() if d % 2 == 1]
+    #Compute Node Pairs
+    odd_node_pairs = list(itertools.combinations(nodes_odd_degree, 2))
+    # Compute shortest paths.  Return a dictionary with node pairs keys and a single value equal to shortest path distance.
+    odd_node_pairs_shortest_paths = get_shortest_paths_distances(G, odd_node_pairs, 'distance')
+    # Generate the complete graph
+    g_odd_complete = create_complete_graph(odd_node_pairs_shortest_paths, flip_weights=True)
     # Apply max_weight_matching
-    matching = max_weight_matching(G_max_weight, maxcardinality=False, weight='weight')
-    
+    matching = max_weight_matching(g_odd_complete, maxcardinality=False, weight='weight')
     # Add the min weight matching edges to G
     G_aug = add_augmenting_path_to_graph(G, matching)
-    
-    # Make the graph Eulerian
-    e_graph = nx.eulerize(G_aug)
-    
     # Create the Eulerian circuit
-    circuit = create_eulerian_circuit(e_graph, G, starting_node)
+    circuit = create_eulerian_circuit(G_aug, G, starting_node)
 
     return circuit
 
 
-
+# Drone Circuit: Normal
 def drone(G):
     e_graph = nx.eulerize(G.copy())
     circuit = list(nx.eulerian_circuit(e_graph))
     return circuit 
-
 
 # Define the cost of drone 
 fixed_cost_drone = 100 
