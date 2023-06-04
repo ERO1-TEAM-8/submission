@@ -15,7 +15,7 @@ import os
 import glob
 import numpy as np
 import imageio
-from networkx.algorithms.matching import max_weight_matching
+import sys
 
 
 #----------------------Utilities---------------------#
@@ -127,8 +127,9 @@ def nx_graph(G , title , circuit ,cost):
 #----------------------MAIN----------------------#
 sectors = []
 
-
-def main():
+#Outremont, Montreal, Canada
+#Leynhac, France
+def main(city):
     #real graph
     sectors = ["Outremont"]#, "Verdun", "Saint-Léonard", "Rivière-des-prairies-pointe-aux-trembles", "Le Plateau-Mont-Royal"]#
     Gs = []
@@ -136,7 +137,7 @@ def main():
      #   Graph = ox.graph_from_place(sectors[i] + ", Montreal, Canada", network_type='all') # OPTI :certified:
       #  Graphundirected = Graph.to_undirected()
        # Gs.append(Graphundirected)
-    Graph = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
+    Graph = ox.graph_from_place(city, network_type='all') # OPTI :certified:
     
     Graphundirected = Graph.to_undirected()
     Gs.append(Graphundirected)
@@ -146,14 +147,16 @@ def main():
     cost=cost_snow_removal(Graph, circuit)
     print("Ploting graph ...")
     #plot graph : option
-    nx_graph(G , "Leynhac, France\nModel Snow Removal" ,circuit,cost)
+    nx_graph(G, f"{city}\nModel Snow Removal", circuit, cost)
     #Pyvis graph : option
     print("Generating HTML Graph ...")
     pyvis_graph(G , circuit)
     plt.show()
 
 
-
-
 if __name__ == "__main__":
-      main()
+    if len(sys.argv) > 1:
+        city = sys.argv[1]
+        main(city)
+    else:
+        print("Please provide a city as an argument.")

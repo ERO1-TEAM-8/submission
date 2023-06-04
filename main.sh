@@ -1,8 +1,16 @@
  #!/bin/bash
- if [ $# -eq 0 ]; then
+if [ $# -eq 0 ]; then
     echo "Error: No simulation type specified. Please provide either 'drone' or 'snowremoval' as an argument."
     exit 1
 fi
+if [ $# -eq 1 ]; then
+    echo "Error: No City specified. Please provide One : Sector,City,Country"
+    exit 1
+fi
+
+city=$2
+simulation_type=$1
+
 printf -- "
 -----------------------------------------------------
 ⚠️  WARNING ⚠️
@@ -75,8 +83,6 @@ printf -- "---------------------------------------------------------------Finish
 
 
 
-simulation_type=$1
-
 if [[ "$simulation_type" = "snowremoval" ]] || [[ "$simulation_type" = "drone" ]]; then
     printf -- "---------------------------------------------------------------Step2: $simulation_type Simulation ...---------------------------------------------------------------\n"
 
@@ -85,8 +91,8 @@ if [[ "$simulation_type" = "snowremoval" ]] || [[ "$simulation_type" = "drone" ]
         conda activate $input_variable
     fi
     printf -- "---------------------------------------------------------------Conda environment activated---------------------------------------------------------------\n"
-    echo  "Executing:\n"$(which python)" $simulation_type/main.py"
-    $(which python) $simulation_type/main.py
+    echo  "Executing:\n"$(which python)" $simulation_type/main.py $city"
+    $(which python) $simulation_type/main.py $city
     if [ $? -ne 0 ]; then
         echo  "Command failure : Please make sure that python command path is correct and contain anconda \n.Hint: Modify the script to use python3 instead of python  or reinstall  conda ."
         echo  "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------"

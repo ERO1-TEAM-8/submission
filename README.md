@@ -1,10 +1,10 @@
 # Add permission to execute the script
 chmod +x main.sh
 # Run Drone Simulation 
-./main.sh drone
+./main.sh drone Sector,City,Country
 
 # Run Snow Removal Simulation
-./main.sh snow_removal
+./main.sh snow_removal Sector,City,Country
 
 # ⚠️ Warning
 You need to have conda 4.13.0 installed and added to your path.
@@ -21,7 +21,7 @@ line 27: source ~/opt/anaconda3/etc/profile.d/conda.sh
 
 line 74: source ~/opt/anaconda3/etc/profile.d/conda.sh 
 
-# Donate 
+# Donate  🙏 and Have FUN 🤩
 paypal.me/project_maintainer
 
 # Snow Removal Circuit Simulation , Leynhac, France

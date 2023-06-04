@@ -15,7 +15,7 @@ import os
 import glob
 import numpy as np
 import imageio
-from networkx.algorithms.matching import max_weight_matching
+import sys
 
 
 #----------------------Utilities---------------------#
@@ -126,41 +126,42 @@ def nx_graph(G , title , circuit ,cost):
 #----------------------MAIN----------------------#
 
 #Outremont, Montreal, Canada
-def main():
-    #real graph
-
-
-    #NOT OPTI
-    Graph = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
-    G= Graph.to_undirected()
+#Leynhac, France
+def main(city):
+    # real graph
+    Graph = ox.graph_from_place(city, network_type='all')  # OPTI :certified:
+    G = Graph.to_undirected()
     circuit = drone(G)
-    cost =cost_drone(G, circuit)
+    cost = cost_drone(G, circuit)
 
-    #OPTI
-    Graph2 = ox.graph_from_place("Leynhac, France", network_type='all') # OPTI :certified:
-    G2= Graph2.to_undirected()
+    # OPTI
+    Graph2 = ox.graph_from_place(city, network_type='all')  # OPTI :certified:
+    G2 = Graph2.to_undirected()
     circuit2 = drone2(G2)
-    cost2 =cost_drone(G, circuit2)
+    cost2 = cost_drone(G, circuit2)
 
+    print("Plotting graph ...")
 
-    print("Ploting graph ...")
-
-    #plot graph : option
-    nx_graph(G , "Leynhac, France\nModel Drone Normal:" ,circuit,cost)
-    nx_graph(G2 , "Leynhac, France\nModel Drone CPP OPTI:",circuit2,cost2)
+    # plot graph: option
+    nx_graph(G, f"{city}\nModel Drone Normal:", circuit, cost)
+    nx_graph(G2, f"{city}\nModel Drone CPP OPTI:", circuit2, cost2)
     plt.show()
 
-    #pyvis : option
+    # pyvis: option
     print("Generating HTML Graph ...")
-    pyvis_graph(G2 , circuit2)
+    pyvis_graph(G2, circuit2)
 
     print("Generating gif ...")
 
-    #animation 
-    generate_gif(G,circuit,"circuit_drone")
+    # animation
+    generate_gif(G, circuit, "circuit_drone")
     make_circuit_video('circuit_drone/png/', 'circuit_drone/gif/circuit_drone.gif', fps=7)
-    generate_gif(G2,circuit2,"circuit_drone2")
+    generate_gif(G2, circuit2, "circuit_drone2")
     make_circuit_video('circuit_drone2/png/', 'circuit_drone2/gif/circuit_drone2.gif', fps=7)
 
 if __name__ == "__main__":
-      main()
+    if len(sys.argv) > 1:
+        city = sys.argv[1]
+        main(city)
+    else:
+        print("Please provide a city as an argument.")
