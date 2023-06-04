@@ -40,7 +40,87 @@ def make_circuit_video(image_path, movie_filename, fps=5):
 
 def generate_gif(G,circuit,path):
     node_positions = nx.spring_layout(G)  
-    visit_colors = {1:'black', 2:'red', 3:'blue' , 4:'green', 5:'yellow', 6:'orange', 7:'purple', 8:'pink', 9:'brown', 10:'gray'}
+    visit_colors = {
+    1: 'black',
+    2: 'red',
+    3: 'blue',
+    4: 'green',
+    5: 'yellow',
+    6: 'orange',
+    7: 'purple',
+    8: 'pink',
+    9: 'brown',
+    10: 'gray',
+    11: 'cyan',
+    12: 'magenta',
+    13: 'lime',
+    14: 'teal',
+    15: 'lavender',
+    16: 'tan',
+    17: 'azure',
+    18: 'olive',
+    19: 'maroon',
+    20: 'navy',
+    21: 'aquamarine',
+    22: 'turquoise',
+    23: 'gold',
+    24: 'orchid',
+    25: 'crimson',
+    26: 'indigo',
+    27: 'silver',
+    28: 'violet',
+    29: 'coral',
+    30: 'skyblue',
+    31: 'salmon',
+    32: 'khaki',
+    33: 'darkgreen',
+    34: 'hotpink',
+    35: 'thistle',
+    36: 'lightgray',
+    37: 'darkorange',
+    38: 'darkviolet',
+    39: 'limegreen',
+    40: 'darkblue',
+    41: 'goldenrod',
+    42: 'sienna',
+    43: 'mediumorchid',
+    44: 'royalblue',
+    45: 'palegreen',
+    46: 'firebrick',
+    47: 'darkkhaki',
+    48: 'mediumslateblue',
+    49: 'mediumseagreen',
+    50: 'darkslategray',
+    51: 'indianred',
+    52: 'darkslateblue',
+    53: 'mediumturquoise',
+    54: 'cadetblue',
+    55: 'steelblue',
+    56: 'orangered',
+    57: 'slateblue',
+    58: 'darkolivegreen',
+    59: 'tomato',
+    60: 'darkgoldenrod',
+    61: 'mediumaquamarine',
+    62: 'cornflowerblue',
+    63: 'darkorchid',
+    64: 'mediumpurple',
+    65: 'darksalmon',
+    66: 'beige',
+    67: 'blueviolet',
+    68: 'azure',
+    69: 'lightsteelblue',
+    70: 'oldlace',
+    71: 'lawngreen',
+    72: 'lightseagreen',
+    73: 'lightpink',
+    74: 'palevioletred',
+    75: 'lightsalmon',
+    76: 'darkseagreen',
+    77: 'lightskyblue',
+    78: 'greenyellow',
+    }
+
     edge_cnter = {}
     
 
@@ -156,8 +236,8 @@ def main(city):
     # animation
     generate_gif(G, circuit, "circuit_drone")
     make_circuit_video('circuit_drone/png/', 'circuit_drone/gif/circuit_drone.gif', fps=7)
-    generate_gif(G2, circuit2, "circuit_drone2")
-    make_circuit_video('circuit_drone2/png/', 'circuit_drone2/gif/circuit_drone2.gif', fps=7)
+    #generate_gif(G2, circuit2, "circuit_drone2")
+    #make_circuit_video('circuit_drone2/png/', 'circuit_drone2/gif/circuit_drone2.gif', fps=7)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

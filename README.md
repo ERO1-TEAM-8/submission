@@ -33,3 +33,15 @@ paypal.me/project_maintainer (JK)
   <img src="circuit_drone_comp/Screenshot 2023-06-04 at 4.58.31 PM.png" alt="Image 2" width="400" height="400" />
 </div>
 
+# model comparaison drone  simulation, Leynhac, France
+
+<div>
+  <figure>
+    <img src="circuit_drone_comp/gif/circuit_drone.gif" alt="Image 1" width="400" height="400" />
+    <figcaption>Normal Circuit</figcaption>
+  </figure>
+  <figure>
+    <img src="circuit_drone_comp/gif/circuit_drone2.gif" alt="Image 2" width="400" height="400" />
+    <figcaption>Opti circuit</figcaption>
+  </figure>
+</div>
