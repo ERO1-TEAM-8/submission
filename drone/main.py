@@ -142,13 +142,18 @@ def main():
     cost2 =cost_drone(G, circuit2)
 
 
-    #pyvis : option
-    pyvis_graph(G2 , circuit2)
+    print("Ploting graph ...")
 
     #plot graph : option
-    nx_graph(G , "Model Drone Normal:" ,circuit,cost)
-    nx_graph(G2 , "Model Drone CPP OPTI:",circuit2,cost2)
+    nx_graph(G , "Leynhac, France\nModel Drone Normal:" ,circuit,cost)
+    nx_graph(G2 , "Leynhac, France\nModel Drone CPP OPTI:",circuit2,cost2)
     plt.show()
+
+    #pyvis : option
+    print("Generating HTML Graph ...")
+    pyvis_graph(G2 , circuit2)
+
+    print("Generating gif ...")
 
     #animation 
     generate_gif(G,circuit,"circuit_drone")

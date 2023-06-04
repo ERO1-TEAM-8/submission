@@ -144,10 +144,11 @@ def main():
     G = eulerize_directed_graph(Graph)
     circuit =to_eulerian_directed(Graph, G)
     cost=cost_snow_removal(Graph, circuit)
-
+    print("Ploting graph ...")
     #plot graph : option
-    nx_graph(G , "Model Snow Removal" ,circuit,cost)
+    nx_graph(G , "Leynhac, France\nModel Snow Removal" ,circuit,cost)
     #Pyvis graph : option
+    print("Generating HTML Graph ...")
     pyvis_graph(G , circuit)
     plt.show()
 
