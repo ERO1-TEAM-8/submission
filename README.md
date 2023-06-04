@@ -37,7 +37,7 @@ paypal.me/project_maintainer (JK)
 
 
 ![Image 1](circuit_drone_comp/gif/circuit_drone.gif)
-*Normal Circuit*
+Normal Circuit
 
 ![Image 2](circuit_drone_comp/gif/circuit_drone2.gif)
-*Opti circuit*
+Opti circuit
