@@ -64,6 +64,7 @@ def main():
     G2 = eulerize_directed_graph(Graph)
     circuit2 =to_eulerian_directed(Graph, G2)
 
+    cost_snow_removal(Graph, circuit2)
     net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white", directed=True)
 
     # loop over nodes, add them to the pyvis network, and style them
@@ -101,6 +102,7 @@ def main():
     # In    a Jupyter notebook
     IFrame('network.html', width=800, height=600)
  
+
 
     
 

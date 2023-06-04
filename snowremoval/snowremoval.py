@@ -99,28 +99,37 @@ def has_eulerian_circuit(G):
 
 
         
-def cost_snow_removal(G, snowplow_paths):
+type1_cost = 500
+type2_cost = 800  
+type1_km = 1.1
+type2_km = 1.3
 
-    '''
-    # Define the cost model parameters
-    fixed_cost_drone = 100
-    cost_per_km_drone = 0.01
-    fixed_cost_snowplow_type1 = 500
-    cost_per_km_snowplow_type1 = 1.1
-    hourly_cost_type1_first8hours = 1.1
-    hourly_cost_type1_after8hours = 1.3
-    average_speed_type1 = 10
-    # Calculate the cost of snow removal operations
-    cost_snow_removal = 0
-    for sector in sectors:
-        for i in range(len(snowplow_paths[sector])):
-            if i < 8:
-                cost_snow_removal += nx.resistance_distance(G, snowplow_paths[sector][i], snowplow_paths[sector][i+1]) * cost_per_km_snowplow_type1 
-            else:
-                cost_snow_removal += nx.resistance_distance(G, snowplow_paths[sector][i], snowplow_paths[sector][i+1]) * cost_per_km_snowplow_type1 * 1.3
-    cost_snow_removal += fixed_cost_snowplow_type1
-    return cost_snow_removal
-    '''
+def cost_snow_removal(G , circuit):
+    print("The cost of the snowplow type I: " + str(type1_cost) + " $"
+           + "\n The cost of the snowplow type II: " + str(type2_cost) + " $")
+    cost1 =  type1_cost
+    cost2 =  type2_cost
+    print("------------Adding cost to edges-----------------")
+    for i in range(len(circuit)):
+        node1 = circuit[i][0]
+        node2 = circuit[i][1]
+        # Get the coordinates of the nodes
+        coords_1 = (G.nodes[node1]['y'], G.nodes[node1]['x'])
+        coords_2 = (G.nodes[node2]['y'], G.nodes[node2]['x'])
+        
+        # Calculate and print the distance+ cost
+        distance = geopy.distance.geodesic(coords_1, coords_2).km
+        cost1 += (distance * type1_km)
+        cost2 += (distance * type2_km)
+        #Plot cost on edge
+        #nx.draw_networkx_edge_labels(G, pos=nx.spring_layout(G),  edge_labels={(circuit[i][0], circuit[i][1]):
+        #                distance * cost_per_km_drone})
+
+    if cost1 < cost2:
+        print("The snowplow type I is the better one, and the cost will be: " + str(cost1) + " $")
+        return cost1
+    print("The snowplow type I is the better one, and the cost will be: " + str(cost2) + " $")
+    return cost2
 
 
 
