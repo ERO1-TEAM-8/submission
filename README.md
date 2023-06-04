@@ -8,7 +8,7 @@ chmod +x main.sh
 
 # Output
 1. Open graphs plots
-2  Close them
+2. Close them
 3. Generate GIF
 4. Open the GIF and html graph , to play with ,  in the safari browser
 # ⚠️ Warning
