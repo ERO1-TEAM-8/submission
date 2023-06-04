@@ -1,9 +1,9 @@
-# Add permission to execute the script
+# 1. Add permission to execute the script:
 chmod +x main.sh
-# Run Drone Simulation 
+# 2. Run Drone Simulation:
 ./main.sh drone Sector,City,Country
 
-# Run Snow Removal Simulation
+# 3. Run Snow Removal Simulation:
 ./main.sh snow_removal Sector,City,Country
 
 # ⚠️ Warning
