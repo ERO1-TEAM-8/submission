@@ -12,6 +12,9 @@ from networkx.algorithms.matching import max_weight_matching
 import itertools
 
 
+import pandas as pd
+
+
 
 '''
 def multigraph_to_max_weight_graph(G):
@@ -94,18 +97,28 @@ def tocircuit(augmented_graph, original_graph, starting_node=None):
 
 # Drone Circuit: Optimized
 def drone2(graph, starting_node=None):
+
     # Find nodes of odd degree
     nodes_odd_degree = [v for v, d in graph.degree() if d % 2 == 1]
+
     # Compute node pairs
     odd_node_pairs = list(itertools.combinations(nodes_odd_degree, 2))
+
     # Compute shortest paths. Return a dictionary with node pairs as keys and a single value equal to the shortest path distance.
     odd_node_pairs_shortest_paths = shortest(graph, odd_node_pairs, 'distance')
+
     # Generate the complete graph
     g_odd_complete = tocomplete(odd_node_pairs_shortest_paths, flip_weights=True)
+
     # Apply the maximum weight matching
-    matching = max_weight_matching(g_odd_complete, maxcardinality=False, weight='weight')
+    matching = max_weight_matching(g_odd_complete, True)
+
+    #You convert this dictionary to a list of tuples since you have an undirected graph and order does not matter. Removing duplicates yields the unique 18 edge-pairs that cumulatively sum to the least possible distance.
+    odd_matching = list(pd.unique([tuple(sorted([k, v])) for k, v in matching]))
+
     # Add the minimum weight matching edges to the graph
-    augmented_graph = toaug(graph, matching)
+    augmented_graph = toaug(graph, odd_matching)
+
     # Create the Eulerian circuit
     circuit = tocircuit(augmented_graph, graph, starting_node)
 
