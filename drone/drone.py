@@ -113,7 +113,8 @@ def drone2(graph, starting_node=None):
     # Apply the maximum weight matching
     matching = max_weight_matching(g_odd_complete, True)
 
-    #You convert this dictionary to a list of tuples since you have an undirected graph and order does not matter. Removing duplicates yields the unique 18 edge-pairs that cumulatively sum to the least possible distance.
+    #You convert this dictionary to a list of tuples since you have an undirected graph and order does not matter.
+    # Removing duplicates yields the unique 18 edge-pairs that cumulatively sum to the least possible distance.
     odd_matching = list(pd.unique([tuple(sorted([k, v])) for k, v in matching]))
 
     # Add the minimum weight matching edges to the graph
