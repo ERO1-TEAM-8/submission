@@ -130,21 +130,20 @@ sectors = []
 #Outremont, Montreal, Canada
 #Leynhac, France
 def main(city):
-    #real graph
-    sectors = ["Outremont"]#, "Verdun", "Saint-Léonard", "Rivière-des-prairies-pointe-aux-trembles", "Le Plateau-Mont-Royal"]#
     Gs = []
-    #for i in range(len(sectors)):
-     #   Graph = ox.graph_from_place(sectors[i] + ", Montreal, Canada", network_type='all') # OPTI :certified:
-      #  Graphundirected = Graph.to_undirected()
-       # Gs.append(Graphundirected)
     Graph = ox.graph_from_place(city, network_type='all') # OPTI :certified:
+    Gs.append(Graph)
     
-    Graphundirected = Graph.to_undirected()
-    Gs.append(Graphundirected)
-    drone_circuits = []
+    #step 1 eulerize the graph
     G = eulerize_directed_graph(Graph)
+
+    #step 2 get the eulerian circuit
     circuit =to_eulerian_directed(Graph, G)
+
+    #step 3 get the cost of if
     cost=cost_snow_removal(Graph, circuit)
+
+    
     print("Ploting graph ...")
     #plot graph : option
     nx_graph(G, f"{city}\nModel Snow Removal", circuit, cost)

@@ -83,18 +83,6 @@ def has_eulerian_circuit(G):
     # Check if each node has equal in-degree and out-degree
 
     return True
-
-#print(has_eulerian_circuit(G))
-#print(has_eulerian_circuit(nx.eulerize(G)))
-#print(has_eulerian_circuit(G2))
-#print(list(nx.eulerian_circuit(eulerize_preserving_direction(G2))))
-#print(eulerize_preserving_direction(G2).edges)
-#G2 = eulerize_preserving_direction(G2)
-#pos = nx.spring_layout(G2)
-#nx.draw_networkx(G2, arrows=True, **options)
-#plt.show()
-
-
         
 type1_cost = 500
 type2_cost = 800  
@@ -118,12 +106,43 @@ def cost_snow_removal(G , circuit):
         distance = geopy.distance.geodesic(coords_1, coords_2).km
         cost1 += (distance * type1_km)
         cost2 += (distance * type2_km)
-        #Plot cost on edge
-        #nx.draw_networkx_edge_labels(G, pos=nx.spring_layout(G),  edge_labels={(circuit[i][0], circuit[i][1]):
-        #                distance * cost_per_km_drone})
 
     if cost1 < cost2:
         print("The snowplow type I is the better one, and the cost will be: " + str(cost1) + " $")
         return cost1
     print("The snowplow type I is the better one, and the cost will be: " + str(cost2) + " $")
     return cost2
+
+def snow_removal_km(G, circuit):
+    distance = 0
+    circuit_km = []
+    for (u, v) in range(circuit):
+        coords_1 = (G.nodes[u]['y'], G.nodes[u]['x'])
+        coords_2 = (G.nodes[v]['y'], G.nodes[v]['x'])
+        
+        d = geopy.distance.geodesic(coords_1, coords_2).km
+        circuit_km.append(d)
+        distance += d
+    return (distance, circuit_km)
+
+def partition_postman_route(G, num_parts, circuit, total_km, circuit_km):
+    subpaths = []
+    subpath = []
+    target_km = total_km / num_parts
+    subpath_km = 0
+    for i in range(len(circuit)):
+        edge_km = circuit_km[i]
+        subpath.append(circuit[i])
+        subpath_km += edge_km
+        
+        if subpath_km + edge_km >= target_km and subpath:
+            subpaths.append(subpath)
+            subpath = []
+            subpath_km = 0
+
+    # Add the last subpath to the list of subpaths.
+    if subpath:
+        subpaths.append(subpath)
+
+    return subpaths
+

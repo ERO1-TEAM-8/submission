@@ -91,6 +91,8 @@ def tocircuit(augmented_graph, original_graph, starting_node=None):
 
 #CPP
 # Drone Circuit: Optimized
+
+#graph reste inchangé
 def drone2(graph, starting_node=None):
 
     # Find nodes of odd degree
