@@ -95,6 +95,8 @@ def tocircuit(augmented_graph, original_graph, starting_node=None):
     return eulerian_circuit
 
 
+
+#CPP
 # Drone Circuit: Optimized
 def drone2(graph, starting_node=None):
 
@@ -107,10 +109,10 @@ def drone2(graph, starting_node=None):
     # Compute shortest paths. Return a dictionary with node pairs as keys and a single value equal to the shortest path distance.
     odd_node_pairs_shortest_paths = shortest(graph, odd_node_pairs, 'distance')
 
-    # Generate the complete graph
+    # Generate the complete graph for the odd verticies
     g_odd_complete = tocomplete(odd_node_pairs_shortest_paths, flip_weights=True)
 
-    # Apply the maximum weight matching
+    # Apply the minimum  weight matching on the generated graph
     matching = max_weight_matching(g_odd_complete, True)
 
     #You convert this dictionary to a list of tuples since you have an undirected graph and order does not matter.
@@ -127,9 +129,31 @@ def drone2(graph, starting_node=None):
 
 
 # Drone Circuit: Normal
-def drone(G):
-    e_graph = nx.eulerize(G.copy())
-    circuit = list(nx.eulerian_circuit(e_graph))
+def drone(graph, starting_node=None):
+    #eulerise the graph
+    # Find nodes of odd degree
+    nodes_odd_degree = [v for v, d in graph.degree() if d % 2 == 1]
+
+    # Compute node pairs
+    odd_node_pairs = list(itertools.combinations(nodes_odd_degree, 2))
+
+    # Compute shortest paths. Return a dictionary with node pairs as keys and a single value equal to the shortest path distance.
+    odd_node_pairs_shortest_paths = shortest(graph, odd_node_pairs, 'distance')
+
+    # Generate the complete graph for the odd verticies
+    g_odd_complete = tocomplete(odd_node_pairs_shortest_paths, flip_weights=True)
+
+    # Apply the minimum  weight matching on the generated graph
+    matching = max_weight_matching(g_odd_complete, True)
+
+    #You convert this dictionary to a list of tuples since you have an undirected graph and order does not matter.
+    # Removing duplicates yields the unique 18 edge-pairs that cumulatively sum to the least possible distance.
+    odd_matching = list(pd.unique([tuple(sorted([k, v])) for k, v in matching]))
+
+    # Add the minimum weight matching edges to the graph
+    augmented_graph = toaug(graph, odd_matching)
+
+    circuit = list(nx.eulerian_circuit(augmented_graph))
     return circuit 
 
 # Define the cost of drone 
