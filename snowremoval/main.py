@@ -143,10 +143,17 @@ def main(city):
 
     km, circuit_km = snow_removal_km(G, circuit)
     
-    subpaths = partition_postman_route(G, 2, circuit, km, circuit_km)
-    cost = cost_snow_removal(Graph, circuit)
+    cost, part, type = opti_type(km, 8, 3)
+    subpaths = partition_postman_route(part, circuit, km, circuit_km)
+    #cost = cost_snow_removal(Graph, circuit)
 
-
+    if type == 1:
+        romain = 'I'
+    else:
+        romain = 'II'
+    print("The best type of snowplow to use is type" + romain)
+    print("The cost of the operation will be: " + cost)
+    print(subpaths[0])
     print("Ploting graph ...")
     #plot graph : option
     nx_graph(G, f"{city}\nModel Snow Removal", circuit, cost)

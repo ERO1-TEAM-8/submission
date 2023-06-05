@@ -99,12 +99,14 @@ def opti_type(km, workh, days):
     if cost1 < cost2:
         repeat = math.ceil(km / (type1_speed * workh))
         cost = cost1
+        ty = 1
     else:
         repeat = math.ceil(km / (type2_speed * workh))
         cost = cost2
+        ty = 2
     
     div_num = repeat / days
-    return cost, div_num
+    return cost, div_num, ty
 
 def opti_one(km, workh, speed, tkm, cost, post8):
     onedaykm = speed * workh
