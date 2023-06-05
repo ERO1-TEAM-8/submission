@@ -2,7 +2,7 @@ import osmnx as ox
 import networkx as nx
 import matplotlib.pyplot as plt
 import geopy.distance 
-
+import math
 
 
 # Define the cost model parameters
@@ -93,14 +93,35 @@ type2_post8 = 1.5
 type1_speed = 10
 type2_speed = 20
 
-def opti_type(km, h):
-
-    if h <= 8:
-        cost1 = type1_cost + type1_km * type1_speed * h
-        cost2 = type2_cost + type2_km * type2_speed * h 
+def opti_type(km, workh, days):
+    cost1 = opti_one(km, workh, type1_speed, type1_km, type1_cost, type1_post8)
+    cost2 = opti_one(km, workh, type2_speed, type2_km, type2_cost, type2_post8)
+    if cost1 < cost2:
+        repeat = math.ceil(km / (type1_speed * workh))
+        cost = cost1
     else:
-        cost1 = type1_cost + type1_km * type1_speed * 8 + 
-        cost2 = type2_cost + type2_km * type2_speed * 8 
+        repeat = math.ceil(km / (type2_speed * workh))
+        cost = cost2
+    
+    div_num = repeat / days
+    return cost, div_num
+
+def opti_one(km, workh, speed, tkm, cost, post8):
+    onedaykm = speed * workh
+    repeat = math.floor(km / onedaykm)
+    if workh <= 8:
+        daycost = cost + tkm * onedaykm
+    else:
+        daycost = cost + tkm * speed * 8 + post8 * speed * (workh - 8)
+    total_cost = repeat * daycost
+    last = km % onedaykm
+    if last / speed <= 8:
+        total_cost += cost + tkm * last
+    else:
+        total_cost += cost + tkm * speed * 8 + post8 * (last - speed * 8)
+    return total_cost
+    
+
 def cost_snow_removal(G , circuit):
     print("The cost of the snowplow type I: " + str(type1_cost) + " $"
            + "\n The cost of the snowplow type II: " + str(type2_cost) + " $")
@@ -137,7 +158,7 @@ def snow_removal_km(G, circuit):
         distance += d
     return (distance, circuit_km)
 
-def partition_postman_route(G, num_parts, circuit, total_km, circuit_km):
+def partition_postman_route(num_parts, circuit, total_km, circuit_km):
     subpaths = []
     subpath = []
     target_km = total_km / num_parts

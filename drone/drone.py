@@ -179,7 +179,7 @@ def cost_drone(G , circuit):
         #                distance * cost_per_km_drone})
 
     print(" The total cost of the drone is: " + str(cost) + " $")
-    print(" The total number of edges is: " + str(G.number_of_edges()))
+    print(" The total number of original graph edges is: " + str(G.number_of_edges()))
     #print len of the circuit 
     print(" The total length of the circuit is: " + str(len(circuit)))
-    return cost 
+    return cost
