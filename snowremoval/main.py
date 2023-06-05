@@ -40,7 +40,86 @@ def make_circuit_video(image_path, movie_filename, fps=5):
 
 def generate_gif(G,circuit,path):
     node_positions = nx.spring_layout(G)  
-    visit_colors = {1:'black', 2:'red', 3:'blue' , 4:'green', 5:'yellow', 6:'orange', 7:'purple', 8:'pink', 9:'brown', 10:'gray'}
+    visit_colors = {
+    1: 'black',
+    2: 'red',
+    3: 'blue',
+    4: 'green',
+    5: 'yellow',
+    6: 'orange',
+    7: 'purple',
+    8: 'pink',
+    9: 'brown',
+    10: 'gray',
+    11: 'cyan',
+    12: 'magenta',
+    13: 'lime',
+    14: 'teal',
+    15: 'lavender',
+    16: 'tan',
+    17: 'azure',
+    18: 'olive',
+    19: 'maroon',
+    20: 'navy',
+    21: 'aquamarine',
+    22: 'turquoise',
+    23: 'gold',
+    24: 'orchid',
+    25: 'crimson',
+    26: 'indigo',
+    27: 'silver',
+    28: 'violet',
+    29: 'coral',
+    30: 'skyblue',
+    31: 'salmon',
+    32: 'khaki',
+    33: 'darkgreen',
+    34: 'hotpink',
+    35: 'thistle',
+    36: 'lightgray',
+    37: 'darkorange',
+    38: 'darkviolet',
+    39: 'limegreen',
+    40: 'darkblue',
+    41: 'goldenrod',
+    42: 'sienna',
+    43: 'mediumorchid',
+    44: 'royalblue',
+    45: 'palegreen',
+    46: 'firebrick',
+    47: 'darkkhaki',
+    48: 'mediumslateblue',
+    49: 'mediumseagreen',
+    50: 'darkslategray',
+    51: 'indianred',
+    52: 'darkslateblue',
+    53: 'mediumturquoise',
+    54: 'cadetblue',
+    55: 'steelblue',
+    56: 'orangered',
+    57: 'slateblue',
+    58: 'darkolivegreen',
+    59: 'tomato',
+    60: 'darkgoldenrod',
+    61: 'mediumaquamarine',
+    62: 'cornflowerblue',
+    63: 'darkorchid',
+    64: 'mediumpurple',
+    65: 'darksalmon',
+    66: 'beige',
+    67: 'blueviolet',
+    68: 'azure',
+    69: 'lightsteelblue',
+    70: 'oldlace',
+    71: 'lawngreen',
+    72: 'lightseagreen',
+    73: 'lightpink',
+    74: 'palevioletred',
+    75: 'lightsalmon',
+    76: 'darkseagreen',
+    77: 'lightskyblue',
+    78: 'greenyellow',
+    }
     edge_cnter = {}
     
 
@@ -117,11 +196,12 @@ def pyvis_graph(G ,circuit):
     IFrame('network.html', width=800, height=600)
     
 
-def nx_graph(G , title , circuit ,cost):
-    G = change_color(G, circuit , 'r')
+def nx_graph(G , title  ,cost, circuit,original_edges , save_path):
     plt.figure(figsize=(8, 6))
-    plt.title(title+'\n Total cost:' + str(cost) + " $")
+    plt.title(title+" Total cost:" + str(cost)+" $" +"\nLength Of Circuit:"+str(len(circuit))+"\n# of edges:"+str(G.number_of_edges())+"\n# of original edges:"+str(original_edges))
     nx.draw(G, node_size=10, node_color='black', edge_color='red', alpha=1.0, width=1.0, with_labels=False)
+    plt.savefig(save_path, dpi=120, bbox_inches='tight')
+    plt.close()
 
 
 #----------------------MAIN----------------------#
@@ -145,15 +225,12 @@ def main(city):
     Gs.append(Graph)
     MGraph = nx.MultiDiGraph(Graph)
     #step 1 eulerize the graph
-    G, added_edges = eulerize_directed_graph(MGraph)
+    (added_edges, G) = eulerize_directed_graph(MGraph)
     #step 2 get the eulerian circuit
     circuit = to_eulerian_directed(MGraph, G, added_edges)
-
-    workh = input("Please enter how many hours does a worker work per day:")
-    deadline = input("Please enter how much days they have:")
     km, circuit_km = snow_removal_km(G, circuit) # nombre de km total du circuit, list de km pour chaque edge
     
-    cost, part, type = opti_type(km, workh, deadline) # cost total, nombre de part que dois etre diviser, type de snowplow
+    cost, part, type = opti_type(km, 8, 2) # cost total, nombre de part que dois etre diviser, type de snowplow
     subpaths = partition_postman_route(part, circuit, km, circuit_km) #le circuit apres division(list de list de tuple)
     #cost = cost_snow_removal(Graph, circuit)
 
@@ -163,14 +240,18 @@ def main(city):
         romain = 'II'
     print("The best type of snowplow to use is type" + romain)
     print("The cost of the operation will be: " + str(cost) + " $")
-    print(len(subpaths[0]), len(subpaths[1]))
     print("Ploting graph ...")
     #plot graph : option
-    nx_graph(G, f"{city}\nModel Snow Removal", circuit, cost)
+    nx_graph(G, f"{city}\nModel Snow Removal", cost, circuit ,Graph,"snowremoval.png")
+    
+    plt.show()
     #Pyvis graph : option
     print("Generating HTML Graph ...")
     pyvis_graph(G , circuit)
-    plt.show()
+
+    #print("Generating GIF...")
+   # generate_gif(G,circuit,"circuit_snow")
+    #make_circuit_video('circuit_snow/png/','circuit_snow/gif/circuit_snow.gif', fps=7)
 
 
 if __name__ == "__main__":

@@ -25,11 +25,9 @@ def eulerize_directed_graph(graph):
     start_nodes = [node for node in graph if out_degrees[node] > in_degrees[node]]
     end_nodes = [node for node in graph if in_degrees[node] > out_degrees[node]]
     if start_nodes == [] and end_nodes == []:
-        return graph
+        return [], graph
     
     eulerized_graph = graph.copy()
-    #dummy_node = "dummy"
-    #eulerized_graph.add_node(dummy_node)
     added_edges = []
     for node in start_nodes:
         for i in range(out_degrees[node] - in_degrees[node]):
@@ -37,11 +35,11 @@ def eulerize_directed_graph(graph):
             while not nx.has_path(eulerized_graph, nearest_node, node):
                 nearest_node = random.choice(end_nodes)
             
-            if (in_degrees[nearest_node] > out_degrees[nearest_node]):
+            if in_degrees[nearest_node] > out_degrees[nearest_node]:
                 end_nodes.remove(nearest_node)
             eulerized_graph.add_edge(nearest_node, node)
             added_edges.append((nearest_node, node))
-    return eulerized_graph, added_edges
+    return (added_edges, eulerized_graph)
 
 def to_eulerian_directed(G, eulerized_graph, added_edges):
     eulerian_circuit = list(nx.eulerian_circuit(eulerized_graph)) #
@@ -78,7 +76,6 @@ def has_eulerian_circuit(G):
     # Check if each node has equal in-degree and out-degree
 
     return True
-        
 type1_cost = 500
 type2_cost = 800  
 type1_km = 1.1
@@ -105,7 +102,7 @@ def opti_type(km, workh, days):
 
 def opti_one(km, workh, speed, tkm, cost, post8):
     onedaykm = speed * workh
-    repeat = math.floor(km / onedaykm)
+    repeat = math.floor(km / (speed * workh))
     if workh <= 8:
         daycost = cost + tkm * onedaykm
     else:
