@@ -2,16 +2,9 @@ import osmnx as ox
 import networkx as nx
 import matplotlib.pyplot as plt
 from itertools import combinations
-
 import geopy.distance 
-
-import folium
-
 from networkx.algorithms.matching import max_weight_matching
-
 import itertools
-
-
 import pandas as pd
 
 
