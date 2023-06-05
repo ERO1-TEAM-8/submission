@@ -140,10 +140,13 @@ def main(city):
     #step 2 get the eulerian circuit
     circuit =to_eulerian_directed(Graph, G)
 
-    #step 3 get the cost of if
-    cost=cost_snow_removal(Graph, circuit)
 
+    km, circuit_km = snow_removal_km(G, circuit)
     
+    subpaths = partition_postman_route(G, 2, circuit, km, circuit_km)
+    cost = cost_snow_removal(Graph, circuit)
+
+
     print("Ploting graph ...")
     #plot graph : option
     nx_graph(G, f"{city}\nModel Snow Removal", circuit, cost)

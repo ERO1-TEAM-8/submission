@@ -88,7 +88,19 @@ type1_cost = 500
 type2_cost = 800  
 type1_km = 1.1
 type2_km = 1.3
+type1_post8 = 1.3
+type2_post8 = 1.5
+type1_speed = 10
+type2_speed = 20
 
+def opti_type(km, h):
+
+    if h <= 8:
+        cost1 = type1_cost + type1_km * type1_speed * h
+        cost2 = type2_cost + type2_km * type2_speed * h 
+    else:
+        cost1 = type1_cost + type1_km * type1_speed * 8 + 
+        cost2 = type2_cost + type2_km * type2_speed * 8 
 def cost_snow_removal(G , circuit):
     print("The cost of the snowplow type I: " + str(type1_cost) + " $"
            + "\n The cost of the snowplow type II: " + str(type2_cost) + " $")
@@ -108,9 +120,9 @@ def cost_snow_removal(G , circuit):
         cost2 += (distance * type2_km)
 
     if cost1 < cost2:
-        print("The snowplow type I is the better one, and the cost will be: " + str(cost1) + " $")
+        print("We are using the snowplow type I, the cost will be: " + str(cost1) + " $")
         return cost1
-    print("The snowplow type I is the better one, and the cost will be: " + str(cost2) + " $")
+    print("We are using the snowplow type II, the cost will be: " + str(cost2) + " $")
     return cost2
 
 def snow_removal_km(G, circuit):
@@ -134,13 +146,12 @@ def partition_postman_route(G, num_parts, circuit, total_km, circuit_km):
         edge_km = circuit_km[i]
         subpath.append(circuit[i])
         subpath_km += edge_km
-        
+
         if subpath_km + edge_km >= target_km and subpath:
             subpaths.append(subpath)
             subpath = []
             subpath_km = 0
 
-    # Add the last subpath to the list of subpaths.
     if subpath:
         subpaths.append(subpath)
 

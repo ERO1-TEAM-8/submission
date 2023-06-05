@@ -47,30 +47,43 @@ def create_graph(G, circuit):
 
 
 
+def generate_gif(G,visit_colors,circuit,path):
+    node_positions = nx.spring_layout(G)  
+    edge_cnter = {}
+    # ensure the directory for the images exists
+    if not os.path.exists(path +'/png/'):
+        os.makedirs(path+'/png/')
 
+    if not os.path.exists(path+'/gif/'):
+        os.makedirs(path+'/gif/')
 
-def generate_gif(graphs, visit_colors, path):
-    node_positions = nx.spring_layout(graphs)
-    # Ensure the directory for the images exists
-    if not os.path.exists(path + '/png/'):
-        os.makedirs(path + '/png/')
+    for i, e in enumerate(circuit, start=1):
+        edge = frozenset([e[0], e[1]])
+        if edge in edge_cnter:
+            edge_cnter[edge] += 1
+        else:
+            edge_cnter[edge] = 1
 
-    if not os.path.exists(path + '/gif/'):
-        os.makedirs(path + '/gif/')
-
-    for i, g_i in enumerate(graphs, start=1):
         # Full graph (faded in background)
-        nx.draw_networkx(g_i, pos=node_positions, node_size=6, node_color='gray', with_labels=False, alpha=0.07)
+        nx.draw_networkx(G, pos=node_positions, node_size=6, node_color='gray', with_labels=False, alpha=0.07)
 
         # Edges walked as of iteration i
-        g_i_edge_colors = [visit_colors.get(e[2].get('visits_i', 1), 'black') for e in g_i.edges(data=True)]
+        circuit_i = copy.deepcopy(circuit[0:i])
+        g_i = nx.Graph()
+        for edge_i in circuit_i:
+            # Explicitly form a tuple of the two nodes defining the edge
+            edge_tuple = (edge_i[0], edge_i[1])
+            visits_i = edge_cnter[frozenset(edge_tuple)]
+            g_i.add_edge(edge_i[0], edge_i[1], visits_i=visits_i)
+        g_i_edge_colors = [visit_colors[e[2].get('visits_i', 1)] for e in g_i.edges(data=True)]
 
         nx.draw_networkx_nodes(g_i, pos=node_positions, node_size=6, alpha=0.6, node_color='lightgray', linewidths=0.1)
         nx.draw_networkx_edges(g_i, pos=node_positions, edge_color=g_i_edge_colors, alpha=0.8)
 
         plt.axis('off')
-        plt.savefig(path + '/png/img{}.png'.format(i), dpi=120, bbox_inches='tight')
+        plt.savefig(path+'/png/img{}.png'.format(i), dpi=120, bbox_inches='tight')
         plt.close()
+
 
 
 
@@ -91,6 +104,7 @@ def make_circuit_video(image_path, movie_filename, fps=5):
 #----------------------Plot functions----------------------#
 def pyvis_graph(G ,circuit):
     net = Network(height="750px", width="100%", bgcolor="#222222", font_color="white", directed=True)
+    G = create_graph(G, circuit)
     # loop over nodes, add them to the pyvis network, and style them
     for node in G.nodes():
         net.add_node(
@@ -127,10 +141,10 @@ def pyvis_graph(G ,circuit):
     IFrame('network.html', width=800, height=600)
     
 
-def nx_graph(G , title , circuit ,cost , count):
+def nx_graph(G , title , circuit ,cost):
     G = create_graph(G, circuit)
     plt.figure(figsize=(8, 6))
-    plt.title(title+'\n Total cost:' + str(cost)+" $" +"\n# Of Edges:"+str(count))
+    plt.title(title+'\n Total cost:' + str(cost)+" $" +"\nLength Of Circuit:"+str(len(circuit))+"\n# of edges:"+str(G.number_of_edges()))
     nx.draw(G, node_size=10, node_color='black', edge_color='red', alpha=1.0, width=1.0, with_labels=False)
 
 #----------------------MAIN----------------------#
@@ -222,19 +236,19 @@ def main(city):
     Graph = ox.graph_from_place(city, network_type='all')  # OPTI :certified:
     G = Graph.to_undirected()
     circuit = drone(G)
-    cost, count = cost_drone(G, circuit)
+    cost = cost_drone(G, circuit)
 
     # OPTI
     Graph2 = ox.graph_from_place(city, network_type='all')  # OPTI :certified:
     G2 = Graph2.to_undirected()
     circuit2 = drone2(G2)
-    cost2 , count2 = cost_drone(G, circuit2)
+    cost2 = cost_drone(G, circuit2)
 
     print("Plotting graph ...")
 
     # plot graph: option
-    nx_graph(G, f"{city}\nModel Drone Normal:", circuit, cost,count)
-    nx_graph(G2, f"{city}\nModel Drone CPP OPTI:", circuit2, cost2,count2)
+    nx_graph(G, f"{city}\nModel Drone Normal:", circuit, cost)
+    nx_graph(G2, f"{city}\nModel Drone CPP OPTI:", circuit2, cost2)
     plt.show()
 
     # pyvis: option
@@ -242,12 +256,11 @@ def main(city):
     pyvis_graph(G2, circuit2)
 
     print("Generating gif ...")
-
     # animation
-    generate_gif(G, visit_colors, "circuit_drone")
+    generate_gif(G, visit_colors,circuit,"circuit_drone")
     make_circuit_video('circuit_drone/png/', 'circuit_drone/gif/circuit_drone.gif', fps=7)
-    #generate_gif(G2, circuit2, "circuit_drone2")
-    #make_circuit_video('circuit_drone2/png/', 'circuit_drone2/gif/circuit_drone2.gif', fps=7)
+    generate_gif(G2, visit_colors,circuit2,"circuit_drone2")
+    make_circuit_video('circuit_drone2/png/', 'circuit_drone2/gif/circuit_drone2.gif', fps=7)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

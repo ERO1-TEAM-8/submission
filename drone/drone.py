@@ -160,7 +160,6 @@ def cost_drone(G , circuit):
     #Print fixed cost 
     print(" The fixed cost of the drone is: " + str(fixed_cost_drone) + " $")
     cost =  fixed_cost_drone
-    COUNT=0
     print("------------Adding cost to edges-----------------")
     for i in range(len(circuit)):
         node1 = circuit[i][0]
@@ -174,12 +173,13 @@ def cost_drone(G , circuit):
         print(f"The distance from node {node1} to node {node2} is {distance} km")
         print(f"The cost of the drone from  {node1} to node {node2} is {distance*cost_per_km_drone}")
         cost += (distance * cost_per_km_drone)
-        COUNT+=1
 
         #Plot cost on edge
         #nx.draw_networkx_edge_labels(G, pos=nx.spring_layout(G),  edge_labels={(circuit[i][0], circuit[i][1]):
         #                distance * cost_per_km_drone})
 
     print(" The total cost of the drone is: " + str(cost) + " $")
-    print(" The total number of edges is: " + str(COUNT))
-    return cost , COUNT 
+    print(" The total number of edges is: " + str(G.number_of_edges()))
+    #print len of the circuit 
+    print(" The total length of the circuit is: " + str(len(circuit)))
+    return cost 
