@@ -256,15 +256,15 @@ def main(city):
     plt.show()
 
     # pyvis: option
-    print("Generating HTML Graph ...")
-    pyvis_graph(G2, circuit2)
+    #print("Generating HTML Graph ...")
+   # pyvis_graph(G2, circuit2)
 
-    print("Generating gif ...")
+    #print("Generating gif ...")
     # animation
-    generate_gif(G_copy, visit_colors,circuit,"circuit_drone")
-    make_circuit_video('circuit_drone/png/', 'circuit_drone/gif/circuit_drone.gif', fps=7)
-    generate_gif(G2_copy, visit_colors,circuit2,"circuit_drone2")
-    make_circuit_video('circuit_drone2/png/', 'circuit_drone2/gif/circuit_drone2.gif', fps=7)
+    #generate_gif(G_copy, visit_colors,circuit,"circuit_drone")
+    #make_circuit_video('circuit_drone/png/', 'circuit_drone/gif/circuit_drone.gif', fps=7)
+    #generate_gif(G2_copy, visit_colors,circuit2,"circuit_drone2")
+    #make_circuit_video('circuit_drone2/png/', 'circuit_drone2/gif/circuit_drone2.gif', fps=7)
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:
