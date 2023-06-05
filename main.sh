@@ -105,6 +105,14 @@ if [[ "$simulation_type" = "snowremoval" ]] || [[ "$simulation_type" = "drone" ]
     if [[ -f "network.html" ]]; then
       open "network.html"
     fi
+    
+    if [[ -f "normal.png" ]]; then
+      open -a "Safari" "normal.png"
+    fi
+
+    if [[ -f "opti.png" ]]; then
+      open -a "Safari" "opti.png"
+    fi
 
     # open circuit_drone.gif in Safari if it exists
     if [[ -f "circuit_drone/gif/circuit_drone.gif" ]]; then

@@ -3,7 +3,7 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import geopy.distance 
 import math
-
+import random
 
 # Define the cost model parameters
 fixed_cost_snowplow_type1 = 500
@@ -24,39 +24,34 @@ def eulerize_directed_graph(graph):
     out_degrees = graph.out_degree()
     start_nodes = [node for node in graph if out_degrees[node] > in_degrees[node]]
     end_nodes = [node for node in graph if in_degrees[node] > out_degrees[node]]
-
     if start_nodes == [] and end_nodes == []:
         return graph
     
     eulerized_graph = graph.copy()
-    dummy_node = "dummy"
-    eulerized_graph.add_node(dummy_node)
-
+    #dummy_node = "dummy"
+    #eulerized_graph.add_node(dummy_node)
+    added_edges = []
     for node in start_nodes:
-        eulerized_graph.add_edge(dummy_node, node)
+        for i in range(out_degrees[node] - in_degrees[node]):
+            nearest_node = random.choice(end_nodes)
+            while not nx.has_path(eulerized_graph, nearest_node, node):
+                nearest_node = random.choice(end_nodes)
+            
+            if (in_degrees[nearest_node] > out_degrees[nearest_node]):
+                end_nodes.remove(nearest_node)
+            eulerized_graph.add_edge(nearest_node, node)
+            added_edges.append((nearest_node, node))
+    return eulerized_graph, added_edges
 
-    for node in end_nodes:
-        eulerized_graph.add_edge(node, dummy_node)
-    #Gp =eulerized_graph.copy()
-    #best_matching = nx.Graph(list(nx.max_weight_matching(Gp)))
-    #for n,m in best_matching.edges():
-    #    path = Gp[m][n]["path"]
-    #    eulerized_graph.add_edges_from(nx.utils.pairwise(path))
-    return eulerized_graph
-
-def to_eulerian_directed(G, eulerized_graph):
+def to_eulerian_directed(G, eulerized_graph, added_edges):
     eulerian_circuit = list(nx.eulerian_circuit(eulerized_graph)) #
-    if eulerian_circuit[0][0] == "dummy":
-        eulerian_circuit = eulerian_circuit[1:]
     for i in range(len(eulerian_circuit) - 1):
-        if eulerian_circuit[i][1] == "dummy":
-            short_path = nx.shortest_path(G, eulerian_circuit[i][0], eulerian_circuit[i+1][1])
+        if eulerian_circuit[i] in added_edges:
+            short_path = nx.shortest_path(G, eulerian_circuit[i][0], eulerian_circuit[i][1])
             short_list = []
             for x in range(len(short_path) - 1):
                 short_list.append((short_path[x], short_path[x+1]))
-            eulerian_circuit[i:i+2] = short_list
-    if eulerian_circuit[len(eulerian_circuit) - 1][1] == "dummy":
-        eulerian_circuit = eulerian_circuit[:len(eulerian_circuit) - 1]
+            eulerian_circuit[i:i+1] = short_list
     return eulerian_circuit
 
 
@@ -122,36 +117,11 @@ def opti_one(km, workh, speed, tkm, cost, post8):
     else:
         total_cost += cost + tkm * speed * 8 + post8 * (last - speed * 8)
     return total_cost
-    
-
-def cost_snow_removal(G , circuit):
-    print("The cost of the snowplow type I: " + str(type1_cost) + " $"
-           + "\n The cost of the snowplow type II: " + str(type2_cost) + " $")
-    cost1 =  type1_cost
-    cost2 =  type2_cost
-    print("------------Adding cost to edges-----------------")
-    for i in range(len(circuit)):
-        node1 = circuit[i][0]
-        node2 = circuit[i][1]
-        # Get the coordinates of the nodes
-        coords_1 = (G.nodes[node1]['y'], G.nodes[node1]['x'])
-        coords_2 = (G.nodes[node2]['y'], G.nodes[node2]['x'])
-        
-        # Calculate and print the distance+ cost
-        distance = geopy.distance.geodesic(coords_1, coords_2).km
-        cost1 += (distance * type1_km)
-        cost2 += (distance * type2_km)
-
-    if cost1 < cost2:
-        print("We are using the snowplow type I, the cost will be: " + str(cost1) + " $")
-        return cost1
-    print("We are using the snowplow type II, the cost will be: " + str(cost2) + " $")
-    return cost2
 
 def snow_removal_km(G, circuit):
     distance = 0
     circuit_km = []
-    for (u, v) in range(circuit):
+    for (u, v) in circuit:
         coords_1 = (G.nodes[u]['y'], G.nodes[u]['x'])
         coords_2 = (G.nodes[v]['y'], G.nodes[v]['x'])
         

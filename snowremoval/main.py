@@ -127,24 +127,34 @@ def nx_graph(G , title , circuit ,cost):
 #----------------------MAIN----------------------#
 sectors = []
 
+def is_eulerian(graph):
+    # Check if the graph is strongly connected
+    if not nx.is_strongly_connected(graph):
+        return False
+
+    # Check if in-degree equals out-degree for each vertex
+    for vertex in graph.nodes:
+        if graph.in_degree(vertex) != graph.out_degree(vertex):
+            return False
+
 #Outremont, Montreal, Canada
 #Leynhac, France
 def main(city):
     Gs = []
     Graph = ox.graph_from_place(city, network_type='all') # OPTI :certified:
     Gs.append(Graph)
-    
+    MGraph = nx.MultiDiGraph(Graph)
     #step 1 eulerize the graph
-    G = eulerize_directed_graph(Graph)
-
+    G, added_edges = eulerize_directed_graph(MGraph)
     #step 2 get the eulerian circuit
-    circuit =to_eulerian_directed(Graph, G)
+    circuit = to_eulerian_directed(MGraph, G, added_edges)
 
-
-    km, circuit_km = snow_removal_km(G, circuit)
+    workh = input("Please enter how many hours does a worker work per day:")
+    deadline = input("Please enter how much days they have:")
+    km, circuit_km = snow_removal_km(G, circuit) # nombre de km total du circuit, list de km pour chaque edge
     
-    cost, part, type = opti_type(km, 8, 3)
-    subpaths = partition_postman_route(part, circuit, km, circuit_km)
+    cost, part, type = opti_type(km, workh, deadline) # cost total, nombre de part que dois etre diviser, type de snowplow
+    subpaths = partition_postman_route(part, circuit, km, circuit_km) #le circuit apres division(list de list de tuple)
     #cost = cost_snow_removal(Graph, circuit)
 
     if type == 1:
@@ -152,8 +162,8 @@ def main(city):
     else:
         romain = 'II'
     print("The best type of snowplow to use is type" + romain)
-    print("The cost of the operation will be: " + cost)
-    print(subpaths[0])
+    print("The cost of the operation will be: " + str(cost) + " $")
+    print(len(subpaths[0]), len(subpaths[1]))
     print("Ploting graph ...")
     #plot graph : option
     nx_graph(G, f"{city}\nModel Snow Removal", circuit, cost)

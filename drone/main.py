@@ -140,10 +140,12 @@ def pyvis_graph(G ,circuit):
     IFrame('network.html', width=800, height=600)
     
 
-def nx_graph(G , title  ,cost, circuit,original_edges):
+def nx_graph(G , title  ,cost, circuit,original_edges , save_path):
     plt.figure(figsize=(8, 6))
     plt.title(title+" Total cost:" + str(cost)+" $" +"\nLength Of Circuit:"+str(len(circuit))+"\n# of edges:"+str(G.number_of_edges())+"\n# of original edges:"+str(original_edges))
     nx.draw(G, node_size=10, node_color='black', edge_color='red', alpha=1.0, width=1.0, with_labels=False)
+    plt.savefig(save_path, dpi=120, bbox_inches='tight')
+    plt.close()
 
 #----------------------MAIN----------------------#
 
@@ -249,20 +251,22 @@ def main(city):
 
 
     print("Plotting graph ...")
-
+    
+    save_path1 = "normal.png"
+    save_path2 = "opti.png"
     # plot graph: option
-    nx_graph(G, f"{city}\nModel Drone Normal:", cost ,circuit , original_edges)
-    nx_graph(G2, f"{city}\nModel Drone CPP OPTI:", cost2 , circuit2, original_edges)
+    nx_graph(G, f"{city}\nModel Drone Normal:", cost ,circuit , original_edges,save_path1)
+    nx_graph(G2, f"{city}\nModel Drone CPP OPTI:", cost2 , circuit2, original_edges,save_path2)
     plt.show()
 
     # pyvis: option
-    #print("Generating HTML Graph ...")
-   # pyvis_graph(G2, circuit2)
+    print("Generating HTML Graph ...")
+    pyvis_graph(G2, circuit2)
 
-    #print("Generating gif ...")
+    print("Generating gif ...")
     # animation
-    #generate_gif(G_copy, visit_colors,circuit,"circuit_drone")
-    #make_circuit_video('circuit_drone/png/', 'circuit_drone/gif/circuit_drone.gif', fps=7)
+    generate_gif(G_copy, visit_colors,circuit,"circuit_drone")
+    make_circuit_video('circuit_drone/png/', 'circuit_drone/gif/circuit_drone.gif', fps=7)
     #generate_gif(G2_copy, visit_colors,circuit2,"circuit_drone2")
     #make_circuit_video('circuit_drone2/png/', 'circuit_drone2/gif/circuit_drone2.gif', fps=7)
 
