@@ -4,7 +4,7 @@ chmod +x main.sh
 ./main.sh drone Sector,City,Country
 
 # 3. Run Snow Removal Simulation:
-./main.sh snow_removal Sector,City,Country
+./main.sh snowremoval Sector,City,Country
 
 # Output
 1. Open graphs plots
