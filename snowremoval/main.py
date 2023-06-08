@@ -249,9 +249,9 @@ def main(city):
     print("Generating HTML Graph ...")
     pyvis_graph(G , circuit)
 
-    print("Generating GIF...")
-    generate_gif(G,circuit,"circuit_snow")
-    make_circuit_video('circuit_snow/png/','circuit_snow/gif/circuit_snow.gif', fps=7)
+    #print("Generating GIF...")
+    #generate_gif(G,circuit,"circuit_snow")
+    #make_circuit_video('circuit_snow/png/','circuit_snow/gif/circuit_snow.gif', fps=7)
 
 
 if __name__ == "__main__":
