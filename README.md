@@ -22,9 +22,11 @@ You need to check the path of conda.sh and replace it in the script where there 
 
 The lines to replace are located in the main.sh file at the root of the project:
 
-line 27: source ~/opt/anaconda3/etc/profile.d/conda.sh
+line 48: source ~/opt/anaconda3/etc/profile.d/conda.sh
 
-line 74: source ~/opt/anaconda3/etc/profile.d/conda.sh 
+line 90: source ~/opt/anaconda3/etc/profile.d/conda.sh 
+
+line 105 -> 129 : change safari with your appropriate browser
 
 # Donate  🙏 and Have FUN 🤩
 paypal.me/project_maintainer (JK)
