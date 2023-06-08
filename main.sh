@@ -144,4 +144,6 @@ if [[ $choice != "y" ]]; then
   exit 1
 fi
 echo  "---------------------------------------------------------------Deleting conda environment and cleaning up---------------------------------------------------------------"
-conda deactivate  && conda env remove --name $input_variable --yes && rm -rf network.html  && rm -rf circuit_drone snowremoval.png normal.png opti.png circuit_drone2 
+conda deactivate  && conda env remove --name $input_variable --yes && rm -rf network.html  && rm -rf circuit_drone snowremoval.png normal.png opti.png 
+
+#circuit_drone2 circuit_snow
