@@ -35,6 +35,7 @@ The lines to replace are located in the main.sh file at the root of the project:
 
 line 48: source ~/opt/anaconda3/etc/profile.d/conda.sh\n
 line 90: source ~/opt/anaconda3/etc/profile.d/conda.sh\n
+line 105 -> 129 : change safari with your appropriate browser\n
 -----------------------------------------------------\n"
 
 read -p "Proceed (y/n)? " choice
