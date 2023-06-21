@@ -20,6 +20,13 @@ import sys
 
 #----------------------Utilities---------------------#
 
+def change_color(G, circuit , color):
+    for i in range(len(circuit)):
+        G.add_edge(circuit[i][0],circuit[i][1], color)
+    return G
+
+
+
 #Create the graph from  the circuit
 def create_graph(G, circuit):
     node_positions = nx.spring_layout(G)
@@ -239,7 +246,7 @@ def main(city):
     circuit = drone(G)
     G_copy = G.copy()
     cost = cost_drone(G, circuit)
-    G = create_graph(G, circuit)
+    G = change_color(G, circuit , 'red')
 
     # OPTI
     Graph2 = ox.graph_from_place(city, network_type='all')  # OPTI :certified:
@@ -247,7 +254,7 @@ def main(city):
     circuit2 = drone2(G2)
     G2_copy = G2.copy()
     cost2 = cost_drone(G2, circuit2)
-    G2 = create_graph(G2, circuit2)
+    G2 = change_color(G2, circuit2 , 'red')
 
 
     print("Plotting graph ...")
